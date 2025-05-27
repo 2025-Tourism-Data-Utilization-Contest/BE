@@ -1,11 +1,17 @@
+### 🗑️ 공통 파일 및 디렉토리 ###
 HELP.md
+*.log
+*.tmp
+.DS_Store
+
+### 🚀 Gradle ###
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-### STS ###
+### 🛠️ STS (Spring Tool Suite) ###
 .apt_generated
 .classpath
 .factorypath
@@ -13,11 +19,13 @@ build/
 .settings
 .springBeans
 .sts4-cache
+
+### 🍀 Spring Boot ###
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
-### IntelliJ IDEA ###
+### 🖥️️ IDE 설정 파일 ###
 .idea
 *.iws
 *.iml
@@ -26,12 +34,22 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 
-### NetBeans ###
+### 📝 NetBeans ###
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
 
-### VS Code ###
+### 🔧 VS Code ###
 .vscode/
+
+### 🔐 환경 변수 및 설정 파일 ###
+.env
+/src/main/resources/*.yml
+
+### ✅ 테스트 코드 제외 ###
+/src/test/
+
+### 🧬 Generated Sources ###
+/src/main/generated/
