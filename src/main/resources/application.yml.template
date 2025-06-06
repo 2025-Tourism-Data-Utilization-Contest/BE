@@ -1,0 +1,39 @@
+server:
+  port: ${SERVER_PORT}
+
+spring:
+
+  mvc:
+    log-resolved-exception: true
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate.jdbc.time_zone: UTC
+    show-sql: false
+
+logging:
+  level:
+    org.springframework.security.web.FilterChainProxy: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.security.oauth2: DEBUG
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: ${SPRINGDOC_API_DOCS_PATH}
+  swagger-ui:
+    enabled: true
+    path: ${SPRINGDOC_SWAGGER_UI_PATH}
+    operations-sorter: alpha
+    tags-sorter: alpha
+  packages-to-scan: ${SPRINGDOC_PACKAGES_TO_SCAN}
