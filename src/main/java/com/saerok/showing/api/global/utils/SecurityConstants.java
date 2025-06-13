@@ -18,4 +18,3 @@ public final class SecurityConstants {
     public static final String LOGOUT_ENDPOINT = "/api/v1/logout";
     public static final String POST_METHOD = "POST";
 }
-
