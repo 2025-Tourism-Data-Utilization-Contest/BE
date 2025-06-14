@@ -17,8 +17,35 @@ spring:
       ddl-auto: create
       dialect: org.hibernate.dialect.PostgreSQLDialect
     properties:
-      hibernate.jdbc.time_zone: UTC
+      hibernate.jdbc.time_zone: Asia/Seoul
     show-sql: false
+
+  data:
+      redis:
+        host: ${REDIS_HOST}
+        port: ${REDIS_PORT}
+        password: ${REDIS_PASSWORD}
+        lettuce:
+          pool:
+            max-active: 10
+            max-idle: 10
+            min-idle: 2
+
+    jwt:
+      secret-key: ${JWT_SECRET}
+      access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION}
+      refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION}
+      cookie-domain: ${JWT_COOKIE_DOMAIN}
+
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS}
+  allowed-methods: ${CORS_ALLOWED_METHODS}
+  allowed-headers: ${CORS_ALLOWED_HEADERS}
+  allow-credentials: ${CORS_ALLOW_CREDENTIALS}
+  max-age: ${CORS_MAX_AGE}
+
+frontend:
+  home-url: ${FRONTEND_HOME_URL}
 
 logging:
   level:
