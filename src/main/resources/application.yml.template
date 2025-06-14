@@ -21,21 +21,21 @@ spring:
     show-sql: false
 
   data:
-      redis:
-        host: ${REDIS_HOST}
-        port: ${REDIS_PORT}
-        password: ${REDIS_PASSWORD}
-        lettuce:
-          pool:
-            max-active: 10
-            max-idle: 10
-            min-idle: 2
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+      lettuce:
+        pool:
+          max-active: 10
+          max-idle: 10
+          min-idle: 2
 
-    jwt:
-      secret-key: ${JWT_SECRET}
-      access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION}
-      refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION}
-      cookie-domain: ${JWT_COOKIE_DOMAIN}
+  jwt:
+    secret-key: ${JWT_SECRET}
+    access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION}
+    refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION}
+    cookie-domain: ${JWT_COOKIE_DOMAIN}
 
 cors:
   allowed-origins: ${CORS_ALLOWED_ORIGINS}
