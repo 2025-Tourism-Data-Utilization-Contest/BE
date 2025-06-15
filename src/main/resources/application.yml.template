@@ -2,6 +2,8 @@ server:
   port: ${SERVER_PORT}
 
 spring:
+  config:
+    import: optional:file:.env[.properties]
 
   mvc:
     log-resolved-exception: true
