@@ -65,9 +65,11 @@ showing
  ├── HELP.md
  ├── README.md
  ├── settings.gradle
+```
 
 ## 🖥️ 시스템 아키텍처 다이어그램
 [추후 추가 예정]
 
 ## 🗂️ ERD (Entity Relationship Diagram)
-[추후 추가 예정]
+
+![erd.webp](./docs/showing_erd.png)
