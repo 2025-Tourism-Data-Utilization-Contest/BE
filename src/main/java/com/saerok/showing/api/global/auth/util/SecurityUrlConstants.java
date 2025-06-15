@@ -15,13 +15,23 @@ public class SecurityUrlConstants {
 
     public static class Docs {
         public static final String[] URLS = {
-            "/v3/**", "/swagger-ui/**", "/swagger-resources/**", "/showing/docs/**", "/showing/swagger-ui/**"
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/swagger-ui.html",
+            "/swagger-resources/**",
+            "/showing/docs/**",
+            "/showing/swagger-ui/**",
+            "/webjars/**",
+            "/api-docs/**"
         };
     }
 
     public static class OAuth2 {
         public static final String[] URLS = {
-            "/oauth2/**", "/login/oauth2/**", "/reissue"
+            "/oauth2/**",
+            "/login/oauth2/**",
+            "/reissue",
+            "/login/**",
         };
     }
 
