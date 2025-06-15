@@ -9,6 +9,7 @@ import com.saerok.showing.api.global.auth.util.TokenValidator;
 import com.saerok.showing.api.global.filter.CustomEntryPoint;
 import com.saerok.showing.api.global.filter.CustomLogoutFilter;
 import com.saerok.showing.api.global.filter.JwtFilter;
+import com.saerok.showing.api.global.handler.CustomOAuth2FailureHandler;
 import com.saerok.showing.api.global.handler.CustomOAuth2LoginHandler;
 import com.saerok.showing.api.global.properties.CorsProperties;
 import com.saerok.showing.api.global.properties.JwtProperties;
@@ -56,6 +57,8 @@ public class SecurityConfig {
     private final CustomEntryPoint customEntryPoint;
     private final CustomOAuth2LoginHandler customOAuth2LoginHandler;
     private final CustomOAuth2MemberService customOAuth2MemberService;
+    private final CustomOAuth2FailureHandler customOAuth2FailureHandler;
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -134,9 +137,8 @@ public class SecurityConfig {
         auth
             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             .requestMatchers(SecurityUrlConstants.PUBLIC_URLS).permitAll()
-            .anyRequest().permitAll();
-//            .anyRequest().authenticated();
-//         TODO: 개발 편의성을 위해 전체 허용, 운영 시 authenticated()로 변경
+            // .anyRequest().permitAll()
+            .anyRequest().authenticated(); // TODO: 운영 시 이 부분을 인증 필요하게
     }
 
     private void configureExceptionHandling(ExceptionHandlingConfigurer<HttpSecurity> exceptionHandling) {
@@ -147,6 +149,7 @@ public class SecurityConfig {
         oauth2
             .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2MemberService))
             .successHandler(customOAuth2LoginHandler)
+            .failureHandler(customOAuth2FailureHandler)
             .tokenEndpoint(token -> token.accessTokenResponseClient(authorizationCodeTokenResponseClient()));
     }
 }
