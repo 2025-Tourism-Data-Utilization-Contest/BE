@@ -1,5 +1,6 @@
 package com.saerok.showing.api.global.auth.service;
 
+import com.saerok.showing.api.domain.member.entity.LoginType;
 import com.saerok.showing.api.domain.member.entity.Member;
 import com.saerok.showing.api.domain.member.entity.Role;
 import com.saerok.showing.api.domain.member.repository.MemberRepository;
@@ -58,6 +59,7 @@ public class CustomOAuth2MemberService extends DefaultOAuth2UserService {
             .name(oAuth2Response.getName())
             .profileImage(oAuth2Response.getProfileImage())
             .role(Role.USER)
+            .loginType(LoginType.from(oAuth2Response.getProvider()))
             .build();
     }
 
