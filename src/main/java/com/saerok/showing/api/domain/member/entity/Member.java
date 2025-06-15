@@ -46,6 +46,7 @@ public class Member extends BaseEntity {
     @Column(name = "profile_image")
     private String profileImage;
 
-    @Column(name = "login_type", nullable = false, length = 50)
-    private String loginType;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "login_type")
+    private LoginType loginType;
 }

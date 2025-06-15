@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice
-public class ChaeumExceptionHandler extends ResponseEntityExceptionHandler {
+public class ShowingExceptionHandler extends ResponseEntityExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger("ErrorLogger");
     private static final String LOG_FORMAT_INFO = "\n[🔵INFO] - ({} {})\n(errorCode: {}, className: {})\n{}\n {}: {}";
