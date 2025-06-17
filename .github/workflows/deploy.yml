@@ -64,7 +64,7 @@ jobs:
 
       # Docker 이미지 빌드
       - name: docker image build
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-chaeum .
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing .
 
       # DockerHub 로그인
       - name: docker login
@@ -75,7 +75,7 @@ jobs:
 
       # Docker Hub 이미지 푸시
       - name: docker Hub push
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-chaeum
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing
 
   run-docker-image-on-ec2:
     # build-docker-image 과정이 완료되어야 실행
@@ -85,7 +85,7 @@ jobs:
     steps:
       # 최신 이미지를 pull
       - name: docker pull
-        run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-chaeum
+        run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing
 
       # 기존의 컨테이너 중지
       - name: docker stop container
@@ -95,11 +95,11 @@ jobs:
       - name: docker run new container
         run: |
           sudo docker run --name spring \
-            --network app_chaeum-network \
+            --network app_showing-network \
             --rm -d \
             -p ${{ secrets.SERVER_PORT }}:${{ secrets.SERVER_PORT }} \
             -e SERVER_PORT=${{ secrets.SERVER_PORT }} \
-            ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-chaeum
+            ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing
 
       # 미사용 이미지 정리
       - name: delete old docker image
