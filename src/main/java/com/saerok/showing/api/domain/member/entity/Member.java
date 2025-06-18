@@ -1,5 +1,6 @@
 package com.saerok.showing.api.domain.member.entity;
 
+import com.saerok.showing.api.domain.member.dto.request.MemberUpdateRequest;
 import com.saerok.showing.api.global.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,4 +51,9 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "login_type")
     private LoginType loginType;
+
+    public void update(MemberUpdateRequest memberUpdateRequest) {
+        Optional.ofNullable(memberUpdateRequest.getName()).ifPresent(this::setName);
+        Optional.ofNullable(memberUpdateRequest.getProfileImage()).ifPresent(this::setProfileImage);
+    }
 }
