@@ -58,14 +58,14 @@ public class CustomOAuth2MemberService extends DefaultOAuth2UserService {
             .email(oAuth2Response.getEmail())
             .name(oAuth2Response.getName())
             .profileImage(oAuth2Response.getProfileImage())
-            .role(Role.USER)
+            .role(Role.MEMBER)
             .loginType(LoginType.from(oAuth2Response.getProvider()))
             .build();
     }
 
     private Member updateMember(Member member, String newName) {
         member.setName(member.getName() == null ? newName : member.getName());
-        member.setRole(member.getRole() == null ? Role.USER : member.getRole());
+        member.setRole(member.getRole() == null ? Role.MEMBER : member.getRole());
         return member;
     }
 }

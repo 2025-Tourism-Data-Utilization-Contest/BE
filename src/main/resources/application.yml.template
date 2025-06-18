@@ -104,3 +104,12 @@ springdoc:
     operations-sorter: alpha
     tags-sorter: alpha
   packages-to-scan: ${SPRINGDOC_PACKAGES_TO_SCAN}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always
