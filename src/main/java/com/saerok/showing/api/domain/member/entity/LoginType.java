@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum LoginType {
 
-    LOCAL("LOCAL", "일반 로그인"),
     NAVER("NAVER", "네이버 로그인"),
     KAKAO("KAKAO", "카카오 로그인");
 
