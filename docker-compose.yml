@@ -3,22 +3,22 @@ version: '3.8'
 services:
   db:
     image: postgres:17
-    restart: always
     container_name: showing-database-container
+    restart: always
     ports:
-      - 5432:5432
+      - "5432:5432"
     environment:
-      - POSTGRES_DB=showing
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=${DOCKER_DB_PASS}
-      - TZ=Asia/Seoul
+      POSTGRES_DB: showing
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      TZ: Asia/Seoul
 
   redis:
     image: redis:6.2.4-alpine
     container_name: showing-redis-container
     restart: always
     ports:
-      - 6379:6379
+      - "6379:6379"
     command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
     environment:
-      - TZ=Asia/Seoul
+      TZ: Asia/Seoul
