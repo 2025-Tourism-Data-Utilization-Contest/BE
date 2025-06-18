@@ -7,9 +7,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum Role {
 
-    USER("ROLE_USER", "회원"),
-    ADMIN("ROLE_ADMIN", "관리자");
+    USER("ROLE_MEMBER", "회원", 1),
+    ADMIN("ROLE_ADMIN", "관리자", 2);
 
     private final String key;
     private final String description;
+    private final int level;
 }
