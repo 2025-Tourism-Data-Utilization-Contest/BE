@@ -16,4 +16,16 @@ public interface ThemeRepository extends JpaRepository<Theme, Long> {
         "WHERE s IN :seasons AND d IN :dayTimes")
     List<Theme> findBySeasonAndDayTime(@Param("seasons") List<Season> seasons,
         @Param("dayTimes") List<DayTime> dayTimes);
+
+    @Query("""
+            SELECT t FROM Theme t
+            WHERE t.locationY BETWEEN :minLat AND :maxLat
+              AND t.locationX BETWEEN :minLon AND :maxLon
+        """)
+    List<Theme> findThemesInArea(
+        @Param("minLat") double minLat,
+        @Param("maxLat") double maxLat,
+        @Param("minLon") double minLon,
+        @Param("maxLon") double maxLon
+    );
 }
