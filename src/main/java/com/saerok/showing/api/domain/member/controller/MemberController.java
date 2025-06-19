@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -28,7 +29,8 @@ public class MemberController {
         summary = "내 정보 조회 (마이페이지)",
         description = "[모든 Role 가능] 현재 로그인한 사용자의 정보를 반환합니다."
     )
-    @GetMapping("/me")
+    @PreAuthorize("hasRole('MEMBER')")
+    @GetMapping("")
     public ApiResponse<MyPageResponse> getMember() {
         MyPageResponse response = memberService.getMember();
         return ApiResponse.success(response);
@@ -38,6 +40,7 @@ public class MemberController {
         summary = "회원 수정",
         description = "[모든 Role 가능] 회원의 이름과 프로필 이미지를 수정할 수 있습니다."
     )
+    @PreAuthorize("hasRole('MEMBER')")
     @PatchMapping("")
     public ApiResponse<Long> update(
         @Valid @RequestBody MemberUpdateRequest request
@@ -48,8 +51,9 @@ public class MemberController {
 
     @Operation(
         summary = "회원 삭제",
-        description = "[모든 Role 가능]"
+        description = "[모든 Role 가능] 회원을 탈퇴합니다."
     )
+    @PreAuthorize("hasRole('MEMBER')")
     @DeleteMapping("/{memberId}")
     public ApiResponse<Long> delete(
         @PathVariable(name = "memberId") Long memberId
