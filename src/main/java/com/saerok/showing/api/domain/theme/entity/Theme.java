@@ -48,6 +48,7 @@ public class Theme {
         name = "theme_season",
         joinColumns = @JoinColumn(name = "theme_id")
     )
+    @Enumerated(EnumType.STRING)
     @Column(name = "season")
     private List<Season> seasons = new ArrayList<>();
 
