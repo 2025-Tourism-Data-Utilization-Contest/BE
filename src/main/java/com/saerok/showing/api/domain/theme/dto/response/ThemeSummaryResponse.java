@@ -10,12 +10,12 @@ public class ThemeSummaryResponse {
 
     private Long id;
 
-    private String title;
+    private String originTitle;
 
     public static ThemeSummaryResponse toDto(Theme theme) {
         return ThemeSummaryResponse.builder()
             .id(theme.getId())
-            .title(theme.getTitle())
+            .originTitle(theme.getOriginTitle())
             .build();
     }
 }
