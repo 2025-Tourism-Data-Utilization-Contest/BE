@@ -1,5 +1,7 @@
 package com.saerok.showing.api.domain.theme.entity;
 
+import com.saerok.showing.api.global.entity.BaseEntity;
+import com.saerok.showing.api.global.utils.Locatable;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -27,7 +29,7 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "theme")
-public class Theme {
+public class Theme extends BaseEntity implements Locatable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,4 +71,14 @@ public class Theme {
 
     @Column(name = "location_y", nullable = false)
     private Double locationY;
+
+    @Override
+    public double getLocationX() {
+        return this.locationX;
+    }
+
+    @Override
+    public double getLocationY() {
+        return this.locationY;
+    }
 }
