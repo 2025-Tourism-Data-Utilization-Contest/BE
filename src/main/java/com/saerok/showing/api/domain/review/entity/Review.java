@@ -4,6 +4,8 @@ import com.saerok.showing.api.domain.member.entity.Member;
 import com.saerok.showing.api.global.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,6 +18,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.tool.schema.TargetType;
 
 @Entity
 @Getter
@@ -38,8 +41,9 @@ public class Review extends BaseEntity {
     @Column(name = "target_id", nullable = false)
     private Long targetId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "target_type", nullable = false, length = 50)
-    private String targetType;
+    private ReviewTargetType targetType;
 
     @Column(name = "rating", nullable = false)
     private Integer rating;
