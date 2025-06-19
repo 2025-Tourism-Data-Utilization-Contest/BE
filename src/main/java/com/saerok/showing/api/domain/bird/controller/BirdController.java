@@ -25,7 +25,7 @@ public class BirdController {
         description = "[모든 Role 가능] birdId로 새의 상세 정보를 조회합니다."
     )
     @PreAuthorize("hasRole('MEMBER')")
-    @GetMapping("")
+    @GetMapping("/{birdId}")
     public ApiResponse<BirdDetailResponse> getBird(@PathVariable Long birdId) {
         BirdDetailResponse bird = birdService.getBird(birdId);
         return ApiResponse.success(bird);
