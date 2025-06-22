@@ -31,6 +31,7 @@ public enum ErrorCode {
     // 403: FORBIDDEN (권한 없음)
     FORBIDDEN(HttpStatus.FORBIDDEN, "접근이 거부되었습니다."),
     MEMBER_NOT_ADMIN(HttpStatus.FORBIDDEN, "관리자 권한이 필요합니다."),
+    REVIEW_WRITER_MISMATCH(HttpStatus.FORBIDDEN, "리뷰 작성자가 아닙니다."),
 
     // 404: NOT FOUND (리소스를 찾을 수 없음)
     RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND, "요청한 리소스를 찾을 수 없습니다."),
