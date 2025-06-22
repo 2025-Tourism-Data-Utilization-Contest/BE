@@ -4,6 +4,8 @@ import com.saerok.showing.api.domain.member.entity.Member;
 import com.saerok.showing.api.domain.review.dto.request.ReviewCreateRequest;
 import com.saerok.showing.api.domain.review.dto.request.ReviewUpdateRequest;
 import com.saerok.showing.api.global.entity.BaseEntity;
+import com.saerok.showing.api.global.exception.ErrorCode;
+import com.saerok.showing.api.global.exception.ShowingException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -65,5 +67,11 @@ public class Review extends BaseEntity {
     public void update(ReviewUpdateRequest request) {
         this.rating = request.getRating();
         this.comment = request.getComment();
+    }
+
+    public void validateOwner(Member member) {
+        if (!this.member.getId().equals(member.getId())) {
+            throw ShowingException.from(ErrorCode.REVIEW_WRITER_MISMATCH);
+        }
     }
 }
