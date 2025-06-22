@@ -34,8 +34,9 @@ public class ReviewController {
     @Operation(
         summary = "리뷰 등록",
         description = """
-            [모든 Role 가능] 테마 또는 장소에 대해 리뷰를 작성합니다.
-            FE에서 처리한 targetId와 targetType을 포함하여 요청합니다.
+            [모든 Role 가능] 테마 또는 장소에 대해 리뷰를 작성합니다.<br>
+            FE에서 처리한 targetId와 targetType을 포함하여 요청합니다.<br>
+            Rating은 1~5사이의 정수입니다.<br>
             """
     )
     @PreAuthorize("hasRole('MEMBER')")
@@ -63,7 +64,7 @@ public class ReviewController {
     @Operation(
         summary = "리뷰 목록 조회",
         description = """
-        [모든 Role 가능] 특정 대상(THEME 또는 PLACE)에 대한 모든 리뷰를 조회합니다.
+        [모든 Role 가능] 특정 대상(THEME 또는 PLACE)에 대한 모든 리뷰를 조회합니다.<br>
         - `reviewTargetType` : 리뷰 대상의 타입 (예: THEME, PLACE)
         - `targetId` : 대상의 고유 ID (예: 테마 ID 또는 장소 ID)
         """

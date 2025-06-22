@@ -14,23 +14,17 @@ import lombok.Setter;
 public class ReviewCreateRequest {
 
     @NotNull
-    @Schema(description = "타겟Id", example = "THEME or PLACE의 pk값을 입력해주세요.(사용자 작성이 아닌 FE에서 처리)")
+    @Schema(description = "타겟Id", example = "1")
     private Long targetId;
 
     @NotNull
-    @Schema(
-        description = "타겟타입",
-        example = """
-        THEME(테마) or PLACE(장소) 중에 리뷰를 작성할 타입을 골라주세요.
-        사용자 작성이 아닌 FE에서 처리하여 보내줍니다.
-        """
-    )
+    @Schema(description = "타겟타입", example = "THEME")
     private ReviewTargetType targetType;
 
     @NotNull
     @Min(value = 1, message = "별점은 최소 1점 이상이어야 합니다.")
     @Max(value = 5, message = "별점은 최대 5점까지 가능합니다.")
-    @Schema(description = "리뷰 별점", example = "1~5 중 하나의 정수입니다.")
+    @Schema(description = "리뷰 별점", example = "5")
     private int rating;
 
     @NotNull
