@@ -41,9 +41,8 @@ public class ReviewService {
 
     @Transactional(readOnly = true)
     public ReviewDetailResponse getReview(Long reviewId) {
-        Member member = loginMemberProvider.getCurrentLoginMember();
         Review review = findById(reviewId);
-        return ReviewDetailResponse.toDto(review, member);
+        return ReviewDetailResponse.toDto(review);
     }
 
     @Transactional

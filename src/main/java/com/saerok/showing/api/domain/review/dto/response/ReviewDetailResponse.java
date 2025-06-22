@@ -1,6 +1,5 @@
 package com.saerok.showing.api.domain.review.dto.response;
 
-import com.saerok.showing.api.domain.member.entity.Member;
 import com.saerok.showing.api.domain.review.entity.Review;
 import com.saerok.showing.api.domain.review.entity.ReviewTargetType;
 import java.time.LocalDateTime;
@@ -25,7 +24,7 @@ public class ReviewDetailResponse {
 
     private LocalDateTime updatedAt;
 
-    public static ReviewDetailResponse toDto(Review review, Member member) {
+    public static ReviewDetailResponse toDto(Review review) {
         return ReviewDetailResponse.builder()
             .id(review.getId())
             .memberName(review.getMember().getName())
