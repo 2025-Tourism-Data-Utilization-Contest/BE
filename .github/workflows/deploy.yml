@@ -99,7 +99,7 @@ jobs:
         run: |
           sudo docker run --name spring \
             --network app_showing-network \
-            --rm -d \
+            -d \
             -p ${{ secrets.SERVER_PORT }}:${{ secrets.SERVER_PORT }} \
             -e SERVER_PORT=${{ secrets.SERVER_PORT }} \
             ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing
