@@ -8,6 +8,9 @@ on:
 permissions:
   contents: read
 
+env:  # 공통 환경 변수 선언
+  IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing
+
 jobs:
   build-docker-image:
     name: Build and Push Docker Image
@@ -35,46 +38,31 @@ jobs:
 
       - name: Generate application.yml from template
         run: |
-          export SERVER_PORT=${{ secrets.SERVER_PORT }}
-          export DB_URL=${{ secrets.DB_URL }}
-          export DB_USERNAME=${{ secrets.DB_USERNAME }}
-          export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-          export REDIS_HOST=${{ secrets.REDIS_HOST }}
-          export REDIS_PORT=${{ secrets.REDIS_PORT }}
-          export REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
-          export NAVER_CLIENT_ID=${{ secrets.NAVER_CLIENT_ID }}
-          export NAVER_CLIENT_SECRET=${{ secrets.NAVER_CLIENT_SECRET }}
-          export NAVER_REDIRECT_URI=${{ secrets.NAVER_REDIRECT_URI }}
-          export KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}
-          export KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }}
-          export KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }}
-          export JWT_SECRET=${{ secrets.JWT_SECRET }}
-          export JWT_ACCESS_TOKEN_EXPIRATION=${{ secrets.JWT_ACCESS_TOKEN_EXPIRATION }}
-          export JWT_REFRESH_TOKEN_EXPIRATION=${{ secrets.JWT_REFRESH_TOKEN_EXPIRATION }}
-          export JWT_COOKIE_DOMAIN=${{ secrets.JWT_COOKIE_DOMAIN }}
-          export BUCKET_NAME=${{ secrets.BUCKET_NAME }}
-          export S3_ACCESS_KEY=${{ secrets.S3_ACCESS_KEY }}
-          export S3_SECRET_KEY=${{ secrets.S3_SECRET_KEY }}
-          export S3_REGION=${{ secrets.S3_REGION }}
-          export CORS_ALLOWED_ORIGINS=${{ secrets.CORS_ALLOWED_ORIGINS }}
-          export CORS_ALLOWED_METHODS=${{ secrets.CORS_ALLOWED_METHODS }}
-          export CORS_ALLOWED_HEADERS=${{ secrets.CORS_ALLOWED_HEADERS }}
-          export CORS_ALLOW_CREDENTIALS=${{ secrets.CORS_ALLOW_CREDENTIALS }}
-          export CORS_MAX_AGE=${{ secrets.CORS_MAX_AGE }}
-          export FRONTEND_HOME_URL=${{ secrets.FRONTEND_HOME_URL }}
-          export SPRINGDOC_API_DOCS_PATH=${{ secrets.SPRINGDOC_API_DOCS_PATH }}
-          export SPRINGDOC_SWAGGER_UI_PATH=${{ secrets.SPRINGDOC_SWAGGER_UI_PATH }}
-          export SPRINGDOC_PACKAGES_TO_SCAN=${{ secrets.SPRINGDOC_PACKAGES_TO_SCAN }}
+          echo "Generating application.yml..."
+          for var in \
+            SERVER_PORT DB_URL DB_USERNAME DB_PASSWORD \
+            REDIS_HOST REDIS_PORT REDIS_PASSWORD \
+            NAVER_CLIENT_ID NAVER_CLIENT_SECRET NAVER_REDIRECT_URI \
+            KAKAO_CLIENT_ID KAKAO_CLIENT_SECRET KAKAO_REDIRECT_URI \
+            JWT_SECRET JWT_ACCESS_TOKEN_EXPIRATION JWT_REFRESH_TOKEN_EXPIRATION JWT_COOKIE_DOMAIN \
+            BUCKET_NAME S3_ACCESS_KEY S3_SECRET_KEY S3_REGION \
+            CORS_ALLOWED_ORIGINS CORS_ALLOWED_METHODS CORS_ALLOWED_HEADERS \
+            CORS_ALLOW_CREDENTIALS CORS_MAX_AGE \
+            FRONTEND_HOME_URL \
+            SPRINGDOC_API_DOCS_PATH SPRINGDOC_SWAGGER_UI_PATH SPRINGDOC_PACKAGES_TO_SCAN
+          do
+            export "$var=${{ secrets[format('{0}', var)] }}"
+          done
 
           envsubst < src/main/resources/application.yml.template > src/main/resources/application.yml
 
-      - name: Build Spring Boot Application (with Gradle summary)
+      - name: Build Spring Boot Application
         uses: gradle/gradle-build-action@v2
         with:
           arguments: clean bootJar
 
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing .
+        run: docker build -t $IMAGE_NAME .
 
       - name: Login to DockerHub
         uses: docker/login-action@v2
@@ -83,7 +71,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Push Docker image to DockerHub
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing
+        run: docker push $IMAGE_NAME
 
   run-docker-image-on-ec2:
     name: Deploy on EC2
@@ -92,7 +80,7 @@ jobs:
 
     steps:
       - name: Pull latest Docker image
-        run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing
+        run: sudo docker pull $IMAGE_NAME
 
       - name: Stop and remove existing container
         run: |
@@ -105,8 +93,18 @@ jobs:
             --network app_showing-network \
             -d \
             -p ${{ secrets.SERVER_PORT }}:${{ secrets.SERVER_PORT }} \
-            -e SERVER_PORT=${{ secrets.SERVER_PORT }} \
-            ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing
+            $(printf -- "-e %s=${{ secrets[%s] } } " \
+              SERVER_PORT DB_URL DB_USERNAME DB_PASSWORD \
+              REDIS_HOST REDIS_PORT REDIS_PASSWORD \
+              NAVER_CLIENT_ID NAVER_CLIENT_SECRET NAVER_REDIRECT_URI \
+              KAKAO_CLIENT_ID KAKAO_CLIENT_SECRET KAKAO_REDIRECT_URI \
+              JWT_SECRET JWT_ACCESS_TOKEN_EXPIRATION JWT_REFRESH_TOKEN_EXPIRATION JWT_COOKIE_DOMAIN \
+              BUCKET_NAME S3_ACCESS_KEY S3_SECRET_KEY S3_REGION \
+              CORS_ALLOWED_ORIGINS CORS_ALLOWED_METHODS CORS_ALLOWED_HEADERS \
+              CORS_ALLOW_CREDENTIALS CORS_MAX_AGE \
+              FRONTEND_HOME_URL \
+              SPRINGDOC_API_DOCS_PATH SPRINGDOC_SWAGGER_UI_PATH SPRINGDOC_PACKAGES_TO_SCAN) \
+            $IMAGE_NAME
 
       - name: Clean up unused Docker images
         run: sudo docker system prune -f
