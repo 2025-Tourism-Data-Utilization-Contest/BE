@@ -54,6 +54,10 @@ jobs:
           JWT_ACCESS_TOKEN_EXPIRATION: ${{ secrets.JWT_ACCESS_TOKEN_EXPIRATION }}
           JWT_REFRESH_TOKEN_EXPIRATION: ${{ secrets.JWT_REFRESH_TOKEN_EXPIRATION }}
           JWT_COOKIE_DOMAIN: ${{ secrets.JWT_COOKIE_DOMAIN }}
+          BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+          S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
+          S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
+          S3_REGION: ${{ secrets.S3_REGION }}
           CORS_ALLOWED_ORIGINS: ${{ secrets.CORS_ALLOWED_ORIGINS }}
           CORS_ALLOWED_METHODS: ${{ secrets.CORS_ALLOWED_METHODS }}
           CORS_ALLOWED_HEADERS: ${{ secrets.CORS_ALLOWED_HEADERS }}
@@ -63,10 +67,6 @@ jobs:
           SPRINGDOC_API_DOCS_PATH: ${{ secrets.SPRINGDOC_API_DOCS_PATH }}
           SPRINGDOC_SWAGGER_UI_PATH: ${{ secrets.SPRINGDOC_SWAGGER_UI_PATH }}
           SPRINGDOC_PACKAGES_TO_SCAN: ${{ secrets.SPRINGDOC_PACKAGES_TO_SCAN }}
-          BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
-          S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
-          S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
-          S3_REGION: ${{ secrets.S3_REGION }}
 
       - name: Build Spring Boot Application (with Gradle summary)
         uses: gradle/gradle-build-action@v2
