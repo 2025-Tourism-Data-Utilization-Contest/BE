@@ -27,7 +27,7 @@ public class S3StorageService implements StorageService {
     @Value("${BUCKET_NAME}")
     private String bucketName;
 
-    @Value("${S3_REGION}")
+    @Value("${cloud.aws.region.static}")
     private String region;
 
     private static final List<String> ALLOWED_EXTENSIONS =
