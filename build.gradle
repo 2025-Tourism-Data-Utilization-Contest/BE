@@ -41,6 +41,10 @@ dependencies {
 	implementation 'org.postgresql:postgresql'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+	// AWS S3
+	implementation platform('software.amazon.awssdk:bom:2.25.19')
+	implementation 'software.amazon.awssdk:s3'
+
 	// Lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
