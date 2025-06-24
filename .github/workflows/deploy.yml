@@ -68,8 +68,10 @@ jobs:
           S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
           S3_REGION: ${{ secrets.S3_REGION }}
 
-      - name: Build Spring Boot application
-        run: ./gradlew clean bootJar
+      - name: Build Spring Boot Application (with Gradle summary)
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: clean bootJar
 
       - name: Build Docker image
         run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing .
