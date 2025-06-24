@@ -24,7 +24,7 @@ public class S3StorageService implements StorageService {
 
     private final S3Client s3Client;
 
-    @Value("${BUCKET_NAME}")
+    @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
 
     @Value("${cloud.aws.region.static}")
