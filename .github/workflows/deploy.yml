@@ -61,6 +61,10 @@ jobs:
           SPRINGDOC_API_DOCS_PATH: ${{ secrets.SPRINGDOC_API_DOCS_PATH }}
           SPRINGDOC_SWAGGER_UI_PATH: ${{ secrets.SPRINGDOC_SWAGGER_UI_PATH }}
           SPRINGDOC_PACKAGES_TO_SCAN: ${{ secrets.SPRINGDOC_PACKAGES_TO_SCAN }}
+          BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+          S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
+          S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
+          S3_REGION: ${{ secrets.S3_REGION }}
 
       # Docker 이미지 빌드
       - name: docker image build
