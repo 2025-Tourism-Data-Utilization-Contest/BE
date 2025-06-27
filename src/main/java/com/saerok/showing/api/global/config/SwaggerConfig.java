@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 @OpenAPIDefinition(
     servers = {
         @Server(url = "http://localhost:8080", description = "로컬 서버"),
-        @Server(url = "https://saeroksaerok.site", description = "운영 서버")
+        @Server(url = "https://api.saeroksaerok.site", description = "개발 서버")
     }
 )
 public class SwaggerConfig {
@@ -29,7 +29,7 @@ public class SwaggerConfig {
                     .scheme("bearer")
                     .bearerFormat("JWT")
                     .in(SecurityScheme.In.HEADER)
-                    .description("Access Token을 넣어주세요!")))
+                    .description("Access Token을 넣어주세요.")))
             .info(apiInfo())
             .addSecurityItem(new SecurityRequirement().addList("bearer-jwt"));
     }
