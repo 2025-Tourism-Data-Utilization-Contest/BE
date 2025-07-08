@@ -51,7 +51,7 @@ public class PlaceService {
         );
     }
 
-    private Place findById(Long placeId) {
+    public Place findById(Long placeId) {
         return placeRepository.findById(placeId)
             .orElseThrow(() -> ShowingException.from(ErrorCode.PLACE_NOT_FOUND));
     }
