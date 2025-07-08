@@ -29,7 +29,7 @@ public class ReviewService {
         Member member = loginMemberProvider.getCurrentLoginMember();
         Review review = Review.toEntity(member, request);
         reviewRepository.save(review);
-        return null;
+        return review.getId();
     }
 
     @Transactional(readOnly = true)
