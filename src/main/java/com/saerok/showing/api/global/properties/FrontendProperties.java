@@ -14,4 +14,6 @@ import org.springframework.context.annotation.Configuration;
 public class FrontendProperties {
 
     private String homeUrl;
+
+    private String oauthRedirectUrl;
 }
