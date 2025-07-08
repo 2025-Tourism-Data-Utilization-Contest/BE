@@ -32,6 +32,7 @@ public class RoutePlaceService {
         Member currentMember = loginMemberProvider.getCurrentLoginMember();
         Route route = findRouteWithOwnerValidation(routeId, currentMember);
         Place place = placeService.findById(request.getPlaceId());
+        shiftOrderIfDuplicate(routeId, request.getDayNumber(), request.getOrderInDay());
         RoutePlace routePlace = RoutePlace.toEntity(request, route, place);
         routePlaceRepository.save(routePlace);
         return routePlace.getId();
@@ -50,6 +51,9 @@ public class RoutePlaceService {
         Member currentMember = loginMemberProvider.getCurrentLoginMember();
         Route route = findRouteWithOwnerValidation(routeId, currentMember);
         RoutePlace routePlace = findById(routePlaceId);
+        if (isUpdateRequired(routePlace, request)) {
+            shiftOrderIfDuplicate(routeId, request.getDayNumber(), request.getOrderInDay());
+        }
         routePlace.validateBelongsTo(route);
         routePlace.update(request);
         return routePlace.getId();
@@ -68,6 +72,18 @@ public class RoutePlaceService {
     @Transactional(readOnly = true)
     public List<RoutePlace> findByRouteOrderByDayNumberAscOrderInDayAsc(Route route) {
         return routePlaceRepository.findByRouteOrderByDayNumberAscOrderInDayAsc(route);
+    }
+
+    private void shiftOrderIfDuplicate(Long routeId, int dayNumber, int orderInDay) {
+        boolean exists = routePlaceRepository.existsByRouteIdAndDayNumberAndOrderInDay(routeId, dayNumber, orderInDay);
+        if (exists) {
+            routePlaceRepository.shiftOrdersForward(routeId, dayNumber, orderInDay);
+        }
+    }
+
+    private boolean isUpdateRequired(RoutePlace routePlace, RoutePlaceUpdateRequest request) {
+        return routePlace.getDayNumber() != request.getDayNumber() ||
+            routePlace.getOrderInDay() != request.getOrderInDay();
     }
 
     private Route findRouteWithOwnerValidation(Long routeId, Member currentMember) {
