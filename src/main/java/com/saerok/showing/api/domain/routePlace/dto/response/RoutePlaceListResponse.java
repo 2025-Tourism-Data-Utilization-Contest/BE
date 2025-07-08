@@ -17,20 +17,20 @@ public class RoutePlaceListResponse {
     private List<DayGroupResponse> days;
 
     public static RoutePlaceListResponse toDto(Route route, List<RoutePlace> routePlaces) {
-        // 1. dayNumber 기준으로 RoutePlace들을 그룹핑
+        // dayNumber 기준 그룹핑 (순서 유지)
         Map<Integer, List<RoutePlace>> grouped = routePlaces.stream()
             .collect(Collectors.groupingBy(
                 RoutePlace::getDayNumber,
-                LinkedHashMap::new, // 순서유지
+                LinkedHashMap::new,
                 Collectors.toList()
             ));
-        // 2. 그룹핑된 데이터를 DayGroupResponse 형태로 변환
+        // 그룹 데이터를 DayGroupResponse 리스트로 변환
         List<DayGroupResponse> days = grouped.entrySet().stream()
             .map(entry -> {
                 int day = entry.getKey();
                 LocalDate visitDate = route.getStartDate().plusDays(day - 1);
-                List<RoutePlaceSummaryResponse> summaries = entry.getValue().stream()
-                    .map(RoutePlaceSummaryResponse::toDto)
+                List<RoutePlaceBoxResponse> summaries = entry.getValue().stream()
+                    .map(RoutePlaceBoxResponse::toDto)
                     .toList();
                 return new DayGroupResponse(day, visitDate, summaries);
             })
