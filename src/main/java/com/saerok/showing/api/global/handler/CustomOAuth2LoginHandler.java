@@ -47,6 +47,10 @@ public class CustomOAuth2LoginHandler extends SimpleUrlAuthenticationSuccessHand
         CookieUtil.addCookie(response, SecurityConstants.REFRESH_TOKEN_COOKIE_NAME, refreshToken,
             jwtProperties.getRefreshTokenExpiration(), jwtProperties.getCookieDomain());
 
-        response.sendRedirect(frontendProperties.getHomeUrl());
+        String redirectUrl = frontendProperties.getOauthRedirectUrl()
+            + "?accessToken=" + accessToken
+            + "&refreshToken=" + refreshToken;
+
+        response.sendRedirect(redirectUrl);
     }
 }
