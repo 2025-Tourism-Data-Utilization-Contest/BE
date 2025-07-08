@@ -28,7 +28,7 @@ public class ReissueController {
             두 토큰은 쿠키에 담겨 클라이언트에 반환됩니다.
             """
     )
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('MEMBER')")
     @PostMapping("")
     ApiResponse<Void> reissue(
         HttpServletRequest request,
