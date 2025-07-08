@@ -98,6 +98,7 @@ cors:
 
 frontend:
   home-url: ${FRONTEND_HOME_URL}
+  oauth-redirect-url: ${FRONTEND_OAUTH_REDIRECT_URL}
 
 logging:
   level:
