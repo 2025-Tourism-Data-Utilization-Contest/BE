@@ -31,7 +31,8 @@ public enum ErrorCode {
     // 403: FORBIDDEN (권한 없음)
     FORBIDDEN(HttpStatus.FORBIDDEN, "접근이 거부되었습니다."),
     MEMBER_NOT_ADMIN(HttpStatus.FORBIDDEN, "관리자 권한이 필요합니다."),
-    REVIEW_WRITER_MISMATCH(HttpStatus.FORBIDDEN, "리뷰 작성자가 아닙니다."),
+    REVIEW_WRITER_MISMATCH(HttpStatus.FORBIDDEN, "요청한 리뷰에 대해 접근 권한이 아닙니다."),
+    ROUTE_MAKER_MISMATCH(HttpStatus.FORBIDDEN, "요청한 여행코스에 대해 접근 권한이 없습니다."),
 
     // 404: NOT FOUND (리소스를 찾을 수 없음)
     RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND, "요청한 리소스를 찾을 수 없습니다."),
@@ -40,6 +41,8 @@ public enum ErrorCode {
     BIRD_NOT_FOUND(HttpStatus.NOT_FOUND, "새를 찾을 수 없습니다."),
     PLACE_NOT_FOUND(HttpStatus.NOT_FOUND, "장소를 찾을 수 없습니다."),
     REVIEW_TARGET_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰를 찾을 수 없습니다."),
+    ROUTE_NOT_FOUND(HttpStatus.NOT_FOUND, "나만의 경로를 찾을 수 없습니다."),
+    ROUTE_PLACE_NOT_FOUND(HttpStatus.NOT_FOUND, "여행코스 내 장소를 찾을 수 없습니다."),
     PROFILE_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "프로필 이미지를 찾을 수 없습니다."),
     TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "토큰을 찾을 수 없습니다."),
     REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰를 찾을 수 없습니다."),
