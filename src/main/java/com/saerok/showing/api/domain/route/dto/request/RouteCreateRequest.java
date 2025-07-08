@@ -1,0 +1,28 @@
+package com.saerok.showing.api.domain.route.dto.request;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
+import java.time.LocalDate;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class RouteCreateRequest {
+
+    @NotNull
+    @Schema(description = "내 여행코스 이름", example = "5학년 3반 나들이 여행코스")
+    private String title;
+
+    @NotNull
+    @Schema(description = "여행 시작일(yyyy-MM-dd)", example = "2025-05-21")
+    private LocalDate startDate;
+
+    @NotNull
+    @Schema(description = "여행 종료일(yyyy-MM-dd)", example = "2025-05-21")
+    private LocalDate endDate;
+
+    @NotNull
+    @Schema(description = "인원수", example = "2")
+    private int peopleCount;
+}
