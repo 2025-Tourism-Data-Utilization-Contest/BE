@@ -33,6 +33,9 @@ public enum ErrorCode {
     MEMBER_NOT_ADMIN(HttpStatus.FORBIDDEN, "관리자 권한이 필요합니다."),
     REVIEW_WRITER_MISMATCH(HttpStatus.FORBIDDEN, "요청한 리뷰에 대해 접근 권한이 아닙니다."),
     ROUTE_MAKER_MISMATCH(HttpStatus.FORBIDDEN, "요청한 여행코스에 대해 접근 권한이 없습니다."),
+    NO_TEAM_LEADER_PERMISSION(HttpStatus.FORBIDDEN, "요청한 사항은 팀 리더만 가능합니다."),
+    ALREADY_JOINED_TEAM(HttpStatus.FORBIDDEN, "이미 팀에 가입되어 있습니다."),
+    NOT_MEMBER_OF_TEAM(HttpStatus.FORBIDDEN, "요청한 팀에 소속되어 있지 않습니다."),
 
     // 404: NOT FOUND (리소스를 찾을 수 없음)
     RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND, "요청한 리소스를 찾을 수 없습니다."),
@@ -43,6 +46,7 @@ public enum ErrorCode {
     REVIEW_TARGET_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰를 찾을 수 없습니다."),
     ROUTE_NOT_FOUND(HttpStatus.NOT_FOUND, "나만의 경로를 찾을 수 없습니다."),
     ROUTE_PLACE_NOT_FOUND(HttpStatus.NOT_FOUND, "여행코스 내 장소를 찾을 수 없습니다."),
+    TEAM_NOT_FOUND(HttpStatus.NOT_FOUND, "팀을 찾을 수 없습니다."),
     PROFILE_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "프로필 이미지를 찾을 수 없습니다."),
     TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "토큰을 찾을 수 없습니다."),
     REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰를 찾을 수 없습니다."),
