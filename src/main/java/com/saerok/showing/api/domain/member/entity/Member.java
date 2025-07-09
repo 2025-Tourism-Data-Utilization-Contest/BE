@@ -1,14 +1,18 @@
 package com.saerok.showing.api.domain.member.entity;
 
 import com.saerok.showing.api.domain.member.dto.request.MemberUpdateRequest;
+import com.saerok.showing.api.domain.team.entity.Team;
 import com.saerok.showing.api.global.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.Optional;
 import lombok.AccessLevel;
@@ -52,8 +56,20 @@ public class Member extends BaseEntity {
     @Column(name = "login_type")
     private LoginType loginType;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
+    private Team team;
+
     public void update(MemberUpdateRequest memberUpdateRequest) {
         Optional.ofNullable(memberUpdateRequest.getName()).ifPresent(this::setName);
         Optional.ofNullable(memberUpdateRequest.getProfileImage()).ifPresent(this::setProfileImage);
+    }
+
+    public void joinTeam(Team team) {
+        this.team = team;
+    }
+
+    public void leaveTeam() {
+        this.team = null;
     }
 }
