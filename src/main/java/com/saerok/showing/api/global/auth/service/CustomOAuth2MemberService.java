@@ -60,6 +60,7 @@ public class CustomOAuth2MemberService extends DefaultOAuth2UserService {
             .profileImage(oAuth2Response.getProfileImage())
             .role(Role.MEMBER)
             .loginType(LoginType.from(oAuth2Response.getProvider()))
+            .team(null)
             .build();
     }
 
