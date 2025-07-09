@@ -34,9 +34,9 @@ public class RouteController {
     @PreAuthorize("hasRole('MEMBER')")
     @PostMapping("")
     public ApiResponse<Long> createRoute(
-        @Valid @RequestBody RouteCreateRequest routeCreateRequest
+        @Valid @RequestBody RouteCreateRequest request
     ) {
-        Long id = routeService.save(routeCreateRequest);
+        Long id = routeService.save(request);
         return ApiResponse.success(id);
     }
 
