@@ -12,6 +12,8 @@ import com.saerok.showing.api.domain.post.repository.PostRepository;
 import com.saerok.showing.api.global.auth.util.LoginMemberProvider;
 import com.saerok.showing.api.global.exception.ErrorCode;
 import com.saerok.showing.api.global.exception.ShowingException;
+import com.saerok.showing.api.global.file.entity.UploadedFile;
+import com.saerok.showing.api.global.file.service.FileService;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -24,11 +26,13 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final LoginMemberProvider loginMemberProvider;
+    private final FileService fileService;
 
     @Transactional
     public Long save(PostCreateRequest request) {
         Member member = loginMemberProvider.getCurrentLoginMember();
-        Post post = Post.toEntity(member, request);
+        List<UploadedFile> files = fileService.getUploadedFilesByUrls(request.getImageUrls());
+        Post post = Post.toEntity(member, request, files);
         postRepository.save(post);
         return post.getId();
     }
@@ -36,14 +40,15 @@ public class PostService {
     @Transactional(readOnly = true)
     public PostDetailResponse getPost(Long postId) {
         Post post = findById(postId);
-        return PostDetailResponse.toDto(post);
+        int commentCount = getCommentCount(postId);
+        return PostDetailResponse.toDto(post, commentCount);
     }
 
     @Transactional(readOnly = true)
     public List<PostSummaryResponse> getAllPosts(PostType postType, PostSortType sortType) {
         List<Post> posts = getPostsByTypeAndSort(postType, sortType);
         return posts.stream()
-            .map(PostSummaryResponse::toDto)
+            .map(post -> PostSummaryResponse.toDto(post, getCommentCount(post.getId())))
             .collect(Collectors.toList());
     }
 
@@ -65,20 +70,24 @@ public class PostService {
         return postId;
     }
 
-    private Post findById(Long postId) {
-        return postRepository.findById(postId)
-            .orElseThrow(() -> ShowingException.from(ErrorCode.POST_NOT_FOUND));
+    private int getCommentCount(Long postId) {
+        return postRepository.countCommentsOfPost(postId);
     }
 
     private List<Post> getPostsByTypeAndSort(PostType postType, PostSortType sortType) {
         boolean isPopular = sortType == PostSortType.POPULAR;
         if (postType == null) {
             return isPopular
-                ? postRepository.findAllOrderByLikesDesc()
+                ? postRepository.findAllByOrderByLikeCountDesc()
                 : postRepository.findAllByOrderByCreatedAtDesc();
         }
         return isPopular
-            ? postRepository.findByPostTypeOrderByLikesDesc(postType)
+            ? postRepository.findByPostTypeOrderByLikeCountDesc(postType)
             : postRepository.findByPostTypeOrderByCreatedAtDesc(postType);
+    }
+
+    public Post findById(Long postId) {
+        return postRepository.findById(postId)
+            .orElseThrow(() -> ShowingException.from(ErrorCode.POST_NOT_FOUND));
     }
 }
