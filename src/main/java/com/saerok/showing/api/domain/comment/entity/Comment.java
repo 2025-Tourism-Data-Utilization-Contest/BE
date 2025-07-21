@@ -28,7 +28,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Table(name = "post_comment")
+@Table(name = "comment")
 public class Comment extends BaseEntity {
 
     @Id

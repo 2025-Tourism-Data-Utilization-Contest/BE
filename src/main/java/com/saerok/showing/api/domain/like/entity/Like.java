@@ -25,7 +25,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Table(name = "post_like")
+@Table(name = "likes")
 public class Like extends BaseEntity {
 
     @Id

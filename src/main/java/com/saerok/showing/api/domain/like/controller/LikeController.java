@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/likes")
-@Tag(name = "PostLike", description = "좋아요 관리")
+@Tag(name = "Like", description = "좋아요 관리")
 public class LikeController {
 
     private final LikeService likeService;
@@ -31,7 +31,7 @@ public class LikeController {
             """
     )
     @PreAuthorize("hasRole('MEMBER')")
-    @PostMapping
+    @PostMapping("")
     public ApiResponse<Boolean> toggleLike(@Valid @RequestBody LikeToggleRequest request) {
         boolean liked = likeService.toggleLike(request);
         return ApiResponse.success(liked);
