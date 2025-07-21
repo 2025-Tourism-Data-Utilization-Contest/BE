@@ -18,5 +18,5 @@ public class PostUpdateRequest {
     @NotNull
     @Size(max = 1000, message = "게시글 내용은 최대 1000자까지 입력할 수 있습니다.")
     @Schema(description = "게시글 내용", example = "순천만 습지 처음 와봤는데 너무 재밌었어요~!!!!!!")
-    private String comment;
+    private String content;
 }
