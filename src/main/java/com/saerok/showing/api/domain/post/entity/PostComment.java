@@ -1,7 +1,10 @@
 package com.saerok.showing.api.domain.post.entity;
 
 import com.saerok.showing.api.domain.member.entity.Member;
+import com.saerok.showing.api.domain.post.dto.request.PostCommentCreateRequest;
 import com.saerok.showing.api.global.entity.BaseEntity;
+import com.saerok.showing.api.global.exception.ErrorCode;
+import com.saerok.showing.api.global.exception.ShowingException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -42,5 +45,17 @@ public class PostComment extends BaseEntity {
     @Column(name = "comment", nullable = false, length = 1000)
     private String comment;
 
+    public static PostComment toEntity(Member member, Post post, PostCommentCreateRequest request) {
+        return PostComment.builder()
+            .member(member)
+            .post(post)
+            .comment(request.getComment())
+            .build();
+    }
 
+    public void validateOwner(Member loginMember) {
+        if (!this.member.getId().equals(loginMember.getId())) {
+            throw ShowingException.from(ErrorCode.COMMENT_WRITER_MISMATCH);
+        }
+    }
 }
