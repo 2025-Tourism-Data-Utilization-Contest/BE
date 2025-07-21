@@ -1,7 +1,8 @@
-package com.saerok.showing.api.domain.post.entity;
+package com.saerok.showing.api.domain.comment.entity;
 
 import com.saerok.showing.api.domain.member.entity.Member;
-import com.saerok.showing.api.domain.post.dto.request.PostCommentCreateRequest;
+import com.saerok.showing.api.domain.comment.dto.request.CommentCreateRequest;
+import com.saerok.showing.api.domain.post.entity.Post;
 import com.saerok.showing.api.global.entity.BaseEntity;
 import com.saerok.showing.api.global.exception.ErrorCode;
 import com.saerok.showing.api.global.exception.ShowingException;
@@ -28,7 +29,7 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "post_comment")
-public class PostComment extends BaseEntity {
+public class Comment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,17 +46,31 @@ public class PostComment extends BaseEntity {
     @Column(name = "comment", nullable = false, length = 1000)
     private String comment;
 
-    public static PostComment toEntity(Member member, Post post, PostCommentCreateRequest request) {
-        return PostComment.builder()
+    @Column(name = "like_count", nullable = false)
+    private int likeCount;
+
+    public static Comment toEntity(Member member, Post post, CommentCreateRequest request) {
+        return Comment.builder()
             .member(member)
             .post(post)
             .comment(request.getComment())
+            .likeCount(0)
             .build();
     }
 
     public void validateOwner(Member loginMember) {
         if (!this.member.getId().equals(loginMember.getId())) {
             throw ShowingException.from(ErrorCode.COMMENT_WRITER_MISMATCH);
+        }
+    }
+
+    public void increaseLikeCount() {
+        this.likeCount++;
+    }
+
+    public void decreaseLikeCount() {
+        if (this.likeCount > 0) {
+            this.likeCount--;
         }
     }
 }
