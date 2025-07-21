@@ -14,6 +14,7 @@ public enum ErrorCode {
     FILE_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "파일 크기가 제한을 초과했습니다."),
     UNSUPPORTED_OAUTH2_PROVIDER(HttpStatus.BAD_REQUEST, "지원하지 않는 OAuth2 제공자입니다."),
     INVALID_SOCIAL_TYPE(HttpStatus.BAD_REQUEST, "유효하지 않은 소셜 로그인 타입입니다."),
+    INVALID_LIKE_TARGET_TYPE(HttpStatus.BAD_REQUEST, "올바르지 않은 좋아요 대상 타입입니다."),
 
     // 401: UNAUTHORIZED (인증 실패)
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증이 필요합니다."),
@@ -31,7 +32,9 @@ public enum ErrorCode {
     // 403: FORBIDDEN (권한 없음)
     FORBIDDEN(HttpStatus.FORBIDDEN, "접근이 거부되었습니다."),
     MEMBER_NOT_ADMIN(HttpStatus.FORBIDDEN, "관리자 권한이 필요합니다."),
+    REVIEW_WRITER_MISMATCH(HttpStatus.FORBIDDEN, "리뷰 작성자가 아닙니다."),
     POST_WRITER_MISMATCH(HttpStatus.FORBIDDEN, "게시글 작성자가 아닙니다."),
+    COMMENT_WRITER_MISMATCH(HttpStatus.FORBIDDEN, "댓글 작성자가 아닙니다."),
     ROUTE_MAKER_MISMATCH(HttpStatus.FORBIDDEN, "요청한 여행코스에 대해 접근 권한이 없습니다."),
     NO_TEAM_LEADER_PERMISSION(HttpStatus.FORBIDDEN, "요청한 사항은 팀 리더만 가능합니다."),
     ALREADY_JOINED_TEAM(HttpStatus.FORBIDDEN, "이미 팀에 가입되어 있습니다."),
@@ -44,6 +47,7 @@ public enum ErrorCode {
     BIRD_NOT_FOUND(HttpStatus.NOT_FOUND, "새를 찾을 수 없습니다."),
     PLACE_NOT_FOUND(HttpStatus.NOT_FOUND, "장소를 찾을 수 없습니다."),
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."),
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다."),
     ROUTE_NOT_FOUND(HttpStatus.NOT_FOUND, "나만의 경로를 찾을 수 없습니다."),
     ROUTE_PLACE_NOT_FOUND(HttpStatus.NOT_FOUND, "여행코스 내 장소를 찾을 수 없습니다."),
     TEAM_NOT_FOUND(HttpStatus.NOT_FOUND, "팀을 찾을 수 없습니다."),
