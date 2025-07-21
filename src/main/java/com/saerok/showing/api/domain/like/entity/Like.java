@@ -1,8 +1,11 @@
-package com.saerok.showing.api.domain.post.entity;
+package com.saerok.showing.api.domain.like.entity;
 
+import com.saerok.showing.api.domain.like.dto.request.LikeToggleRequest;
 import com.saerok.showing.api.domain.member.entity.Member;
 import com.saerok.showing.api.global.entity.BaseEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,7 +26,7 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "post_like")
-public class PostLike extends BaseEntity {
+public class Like extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +35,16 @@ public class PostLike extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Post post;
+    private Long targetId;
 
+    @Enumerated(EnumType.STRING)
+    private LikeTargetType targetType;
+
+    public static Like toEntity(Member member, LikeToggleRequest request) {
+        return Like.builder()
+            .member(member)
+            .targetId(request.getTargetId())
+            .targetType(request.getLikeTargetType())
+            .build();
+    }
 }
