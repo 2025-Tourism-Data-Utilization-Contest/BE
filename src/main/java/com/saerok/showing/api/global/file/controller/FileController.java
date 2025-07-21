@@ -64,22 +64,22 @@ public class FileController {
     }
 
     @Operation(
-        summary = "리뷰 사진 업로드",
+        summary = "게시글 사진 업로드",
         description = """
-            [MEMBER 이상 가능] 리뷰 사진을 업로드합니다.<br>
+            [MEMBER 이상 가능] 게시글 사진을 업로드합니다.<br>
             여러 장 업로드 가능하며 각 파일은 5MB를 넘길 수 없습니다.<br>
             가능한 확장자는 ".jpg", ".jpeg", ".png", ".gif", ".pdf"입니다.
             """)
     @PreAuthorize("hasRole('MEMBER')")
     @PostMapping(
-        value = "/review",
+        value = "/post",
         consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ApiResponse<List<FileUploadResponse>> uploadReviewImage(
         @RequestParam(name = "multipartFile") List<MultipartFile> multipartFiles
     ) {
-        List<FileUploadResponse> fileUploadResponses = fileService.uploadFiles(multipartFiles, "review/");
+        List<FileUploadResponse> fileUploadResponses = fileService.uploadFiles(multipartFiles, "post/");
         return ApiResponse.success(fileUploadResponses);
     }
 
