@@ -38,6 +38,9 @@ public class Team {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "password", nullable = false)
+    private String password;
+
     @OneToOne
     @JoinColumn(name = "leader_id", nullable = false)
     private Member leader;
@@ -46,9 +49,10 @@ public class Team {
     @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
     private List<Member> members = new ArrayList<>();
 
-    public static Team toEntity(TeamCreateRequest request, Member leader) {
+    public static Team toEntity(TeamCreateRequest request, Member leader, String encryptedPassword) {
         return Team.builder()
             .name(request.getName())
+            .password(encryptedPassword)
             .leader(leader)
             .build();
     }
