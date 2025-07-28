@@ -1,6 +1,7 @@
 package com.saerok.showing.api.domain.team.controller;
 
 import com.saerok.showing.api.domain.team.dto.request.TeamCreateRequest;
+import com.saerok.showing.api.domain.team.dto.request.TeamJoinRequest;
 import com.saerok.showing.api.domain.team.dto.response.TeamMemberResponse;
 import com.saerok.showing.api.domain.team.service.TeamService;
 import com.saerok.showing.api.global.response.ApiResponse;
@@ -53,9 +54,9 @@ public class TeamController {
     @PreAuthorize("hasRole('MEMBER')")
     @PostMapping("/{teamId}/join")
     public ApiResponse<Long> joinTeam(
-        @PathVariable(name = "teamId") Long teamId
+        @Valid @RequestBody TeamJoinRequest request
     ) {
-        Long id = teamService.joinTeam(teamId);
+        Long id = teamService.joinTeam(request);
         return ApiResponse.success(id);
     }
 
