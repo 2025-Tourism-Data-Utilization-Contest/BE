@@ -28,6 +28,7 @@ public enum ErrorCode {
     UNSUPPORTED_AUTH_TOKEN(HttpStatus.UNAUTHORIZED, "지원하지 않는 토큰입니다."),
     INVALID_SIGNATURE_TOKEN(HttpStatus.UNAUTHORIZED, "토큰 서명이 유효하지 않습니다."),
     EMPTY_OR_NULL_TOKEN(HttpStatus.UNAUTHORIZED, "토큰이 비어 있거나 null입니다."),
+    INVALID_TEAM_PASSWORD(HttpStatus.UNAUTHORIZED, "팀 입장 비밀번호가 올바르지 않습니다."),
 
     // 403: FORBIDDEN (권한 없음)
     FORBIDDEN(HttpStatus.FORBIDDEN, "접근이 거부되었습니다."),

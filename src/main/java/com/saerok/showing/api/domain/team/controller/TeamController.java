@@ -1,6 +1,7 @@
 package com.saerok.showing.api.domain.team.controller;
 
 import com.saerok.showing.api.domain.team.dto.request.TeamCreateRequest;
+import com.saerok.showing.api.domain.team.dto.request.TeamJoinRequest;
 import com.saerok.showing.api.domain.team.dto.response.TeamMemberResponse;
 import com.saerok.showing.api.domain.team.service.TeamService;
 import com.saerok.showing.api.global.response.ApiResponse;
@@ -48,14 +49,15 @@ public class TeamController {
         description = """
             [모든 Role 가능] 팀에 가입합니다.<br>
             이미 팀이 존재하거나 요청한 팀에 가입된 경우는 가입되지 않습니다.
+            입장할 팁의 아이디와 비밀번호가 필요합니다.
             """
     )
     @PreAuthorize("hasRole('MEMBER')")
     @PostMapping("/{teamId}/join")
     public ApiResponse<Long> joinTeam(
-        @PathVariable(name = "teamId") Long teamId
+        @Valid @RequestBody TeamJoinRequest request
     ) {
-        Long id = teamService.joinTeam(teamId);
+        Long id = teamService.joinTeam(request);
         return ApiResponse.success(id);
     }
 

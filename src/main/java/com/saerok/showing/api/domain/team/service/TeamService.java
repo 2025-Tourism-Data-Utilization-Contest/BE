@@ -3,6 +3,7 @@ package com.saerok.showing.api.domain.team.service;
 import com.saerok.showing.api.domain.member.entity.Member;
 import com.saerok.showing.api.domain.member.repository.MemberRepository;
 import com.saerok.showing.api.domain.team.dto.request.TeamCreateRequest;
+import com.saerok.showing.api.domain.team.dto.request.TeamJoinRequest;
 import com.saerok.showing.api.domain.team.dto.response.TeamMemberResponse;
 import com.saerok.showing.api.domain.team.entity.Team;
 import com.saerok.showing.api.domain.team.repository.TeamRepository;
@@ -12,6 +13,7 @@ import com.saerok.showing.api.global.exception.ShowingException;
 import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,13 +23,15 @@ public class TeamService {
 
     private final TeamRepository teamRepository;
     private final MemberRepository memberRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
     private final LoginMemberProvider loginMemberProvider;
 
     @Transactional
     public Long save(TeamCreateRequest request) {
         Member member = loginMemberProvider.getCurrentLoginMember();
         validateNotAlreadyJoined(member);
-        Team team = Team.toEntity(request, member);
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+        Team team = Team.toEntity(request, member, encodedPassword);
         teamRepository.save(team);
         team.addMember(member);
         memberRepository.save(member);
@@ -35,10 +39,11 @@ public class TeamService {
     }
 
     @Transactional
-    public Long joinTeam(Long teamId) {
+    public Long joinTeam(TeamJoinRequest request) {
         Member member = loginMemberProvider.getCurrentLoginMember();
         validateNotAlreadyJoined(member);
-        Team team = findById(teamId);
+        Team team = findById(request.getTeamId());
+        validateTeamPassword(team, request.getPassword());
         member.joinTeam(team);
         memberRepository.save(member);
         return team.getId();
@@ -95,6 +100,12 @@ public class TeamService {
     private void validateNotAlreadyJoined(Member member) {
         if (member.getTeam() != null) {
             throw ShowingException.from(ErrorCode.ALREADY_JOINED_TEAM);
+        }
+    }
+
+    private void validateTeamPassword(Team team, String rawPassword) {
+        if (!passwordEncoder.matches(rawPassword, team.getPassword())) {
+            throw ShowingException.from(ErrorCode.INVALID_TEAM_PASSWORD);
         }
     }
 
