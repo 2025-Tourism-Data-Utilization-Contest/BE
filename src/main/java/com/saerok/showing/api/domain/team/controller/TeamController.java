@@ -49,6 +49,7 @@ public class TeamController {
         description = """
             [모든 Role 가능] 팀에 가입합니다.<br>
             이미 팀이 존재하거나 요청한 팀에 가입된 경우는 가입되지 않습니다.
+            입장할 팁의 아이디와 비밀번호가 필요합니다.
             """
     )
     @PreAuthorize("hasRole('MEMBER')")
