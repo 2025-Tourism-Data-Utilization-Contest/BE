@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 public enum LikeTargetType {
 
     POST("POST", "게시글"),
-    COMMENT("COMMENT", "댓글");
+    COMMENT("COMMENT", "댓글"),
+    ROUTE("ROUTE", "여행 경로");
 
     private final String key;
     private final String name;
