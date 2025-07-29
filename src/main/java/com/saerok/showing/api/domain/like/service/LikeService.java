@@ -9,6 +9,8 @@ import com.saerok.showing.api.domain.post.entity.Post;
 import com.saerok.showing.api.domain.like.entity.Like;
 import com.saerok.showing.api.domain.like.repository.LikeRepository;
 import com.saerok.showing.api.domain.post.service.PostService;
+import com.saerok.showing.api.domain.route.entity.Route;
+import com.saerok.showing.api.domain.route.service.RouteService;
 import com.saerok.showing.api.global.auth.util.LoginMemberProvider;
 import com.saerok.showing.api.global.exception.ErrorCode;
 import com.saerok.showing.api.global.exception.ShowingException;
@@ -25,6 +27,7 @@ public class LikeService {
     private final LoginMemberProvider loginMemberProvider;
     private final PostService postService;
     private final CommentService commentService;
+    private final RouteService routeService;
 
     @Transactional
     public boolean toggleLike(LikeToggleRequest request) {
@@ -39,6 +42,10 @@ public class LikeService {
             case COMMENT -> {
                 Comment comment = commentService.findById(targetId);
                 return handleToggle(member, request, comment);
+            }
+            case ROUTE -> {
+                Route route = routeService.findById(targetId);
+                return handleToggle(member, request, route);
             }
             default -> throw ShowingException.from(ErrorCode.INVALID_LIKE_TARGET_TYPE);
         }
@@ -69,6 +76,20 @@ public class LikeService {
         }
         likeRepository.save(Like.toEntity(member, request));
         comment.increaseLikeCount();
+        return true;
+    }
+
+    private boolean handleToggle(Member member, LikeToggleRequest request, Route route) {
+        Optional<Like> existingLike = likeRepository.findByMemberAndTargetIdAndTargetType(
+            member, request.getTargetId(), LikeTargetType.ROUTE
+        );
+        if (existingLike.isPresent()) {
+            likeRepository.delete(existingLike.get());
+            route.decreaseLikeCount();
+            return false;
+        }
+        likeRepository.save(Like.toEntity(member, request));
+        route.increaseLikeCount();
         return true;
     }
 }
