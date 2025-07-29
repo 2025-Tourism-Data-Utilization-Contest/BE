@@ -70,6 +70,11 @@ public class PostService {
         return postId;
     }
 
+    public int getPostCount() {
+        Long memberId = loginMemberProvider.getCurrentLoginMemberId();
+        return postRepository.countByMemberId(memberId);
+    }
+
     private int getCommentCount(Long postId) {
         return postRepository.countCommentsOfPost(postId);
     }
