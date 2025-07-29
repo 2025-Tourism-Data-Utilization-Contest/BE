@@ -57,6 +57,9 @@ public class Route extends BaseEntity {
     @Column(name = "people_count")
     private Integer peopleCount;
 
+    @Column(name = "like_count", nullable = false)
+    private int likeCount;
+
     @OneToMany(mappedBy = "route", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RoutePlace> routePlaces = new ArrayList<>();
 
@@ -67,12 +70,23 @@ public class Route extends BaseEntity {
             .startDate(request.getStartDate())
             .endDate(request.getEndDate())
             .peopleCount(request.getPeopleCount())
+            .likeCount(0)
             .build();
     }
 
     public void validateOwner(Member member) {
         if (!this.member.getId().equals(member.getId())) {
             throw ShowingException.from(ErrorCode.ROUTE_MAKER_MISMATCH);
+        }
+    }
+
+    public void increaseLikeCount() {
+        this.likeCount++;
+    }
+
+    public void decreaseLikeCount() {
+        if (this.likeCount > 0) {
+            this.likeCount--;
         }
     }
 }
