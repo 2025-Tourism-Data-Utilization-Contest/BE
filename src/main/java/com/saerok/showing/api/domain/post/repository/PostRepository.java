@@ -21,4 +21,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // 최신순
     List<Post> findByPostTypeOrderByCreatedAtDesc(PostType postType);
     List<Post> findAllByOrderByCreatedAtDesc();
+
+    int countByMemberId(Long memberId);
 }

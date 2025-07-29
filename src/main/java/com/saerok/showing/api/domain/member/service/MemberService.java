@@ -4,9 +4,13 @@ import com.saerok.showing.api.domain.member.dto.request.MemberUpdateRequest;
 import com.saerok.showing.api.domain.member.dto.response.MyPageResponse;
 import com.saerok.showing.api.domain.member.entity.Member;
 import com.saerok.showing.api.domain.member.repository.MemberRepository;
+import com.saerok.showing.api.domain.post.service.PostService;
+import com.saerok.showing.api.domain.route.dto.response.RouteSummaryResponse;
+import com.saerok.showing.api.domain.route.service.RouteService;
 import com.saerok.showing.api.global.auth.util.LoginMemberProvider;
 import com.saerok.showing.api.global.exception.ErrorCode;
 import com.saerok.showing.api.global.exception.ShowingException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,12 +20,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final PostService postService;
+    private final RouteService routeService;
     private final LoginMemberProvider loginMemberProvider;
 
     @Transactional(readOnly = true)
     public MyPageResponse getMember() {
         Member member = loginMemberProvider.getCurrentLoginMember();
-        return MyPageResponse.toDto(member);
+        int postCount = postService.getPostCount();
+        List<RouteSummaryResponse> routes = routeService.getMyRouteSummaries();
+        return MyPageResponse.toDto(member, postCount, routes);
     }
 
     @Transactional

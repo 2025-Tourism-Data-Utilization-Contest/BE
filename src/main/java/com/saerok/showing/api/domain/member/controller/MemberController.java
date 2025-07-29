@@ -27,7 +27,10 @@ public class MemberController {
 
     @Operation(
         summary = "내 정보 조회 (마이페이지)",
-        description = "[모든 Role 가능] 현재 로그인한 사용자의 정보를 반환합니다."
+        description = """
+            [모든 Role 가능] 현재 로그인한 사용자의 마이페이지입니다.<br>
+            회원 이름과 프로필 이미지, 작성한 게시글 수, 내가 만든 여행 경로 등을 조회할 수 있습니다.
+            """
     )
     @PreAuthorize("hasRole('MEMBER')")
     @GetMapping("")

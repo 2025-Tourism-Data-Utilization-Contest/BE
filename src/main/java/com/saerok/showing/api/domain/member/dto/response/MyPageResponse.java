@@ -1,6 +1,8 @@
 package com.saerok.showing.api.domain.member.dto.response;
 
 import com.saerok.showing.api.domain.member.entity.Member;
+import com.saerok.showing.api.domain.route.dto.response.RouteSummaryResponse;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,19 +12,25 @@ public class MyPageResponse {
 
     private String name;
 
+    private String email;
+
     private String profileImage;
 
-    // TODO: 내 루트 가져오는 dto 구현 후 구현
-    // private List<RouteSummaryResponse> routes;
+    private int postCount;
+
+     private List<RouteSummaryResponse> routes;
 
     public static MyPageResponse toDto(
-        Member member
-        // List<RouteSummaryResponse> routes
+        Member member,
+        int postCount,
+        List<RouteSummaryResponse> routes
     ) {
         return MyPageResponse.builder()
             .name(member.getName())
+            .email(member.getEmail())
             .profileImage(member.getProfileImage())
-            //.routes(routes)
+            .postCount(postCount)
+            .routes(routes)
             .build();
     }
 }
