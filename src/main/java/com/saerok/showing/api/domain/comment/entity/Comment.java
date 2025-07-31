@@ -2,6 +2,7 @@ package com.saerok.showing.api.domain.comment.entity;
 
 import com.saerok.showing.api.domain.member.entity.Member;
 import com.saerok.showing.api.domain.comment.dto.request.CommentCreateRequest;
+import com.saerok.showing.api.domain.poll.entity.Poll;
 import com.saerok.showing.api.domain.post.entity.Post;
 import com.saerok.showing.api.global.entity.BaseEntity;
 import com.saerok.showing.api.global.exception.ErrorCode;
@@ -42,6 +43,10 @@ public class Comment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "poll_id")
+    private Poll poll;
 
     @Column(name = "comment", nullable = false, length = 1000)
     private String comment;
