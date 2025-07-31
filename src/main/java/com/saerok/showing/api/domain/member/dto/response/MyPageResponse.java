@@ -18,7 +18,7 @@ public class MyPageResponse {
 
     private int postCount;
 
-     private List<RouteSummaryResponse> routes;
+    private List<RouteSummaryResponse> routes;
 
     public static MyPageResponse toDto(
         Member member,
