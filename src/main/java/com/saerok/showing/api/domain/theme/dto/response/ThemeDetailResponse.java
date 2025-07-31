@@ -17,9 +17,15 @@ public class ThemeDetailResponse {
 
     private String title;
 
-    private String description;
-
     private String themeImage;
+
+    private String address;
+
+    private String locationIntro;
+
+    private List<String> highlightPoints;
+
+    private List<DescriptionBlockResponse> descriptionBlocks;
 
     private List<BirdSummaryResponse> birds;
 
@@ -42,7 +48,14 @@ public class ThemeDetailResponse {
         return ThemeDetailResponse.builder()
             .id(theme.getId())
             .title(theme.getTitle())
-            .description(theme.getDescription())
+            .address(theme.getAddress())
+            .locationIntro(theme.getLocationIntro())
+            .highlightPoints(theme.getHighlightPoints())
+            .descriptionBlocks(
+                theme.getDescriptionBlocks().stream()
+                    .map(DescriptionBlockResponse::toDto)
+                    .toList()
+            )
             .themeImage(theme.getThemeImage())
             .birds(birds)
             .attractionPlaces(attractionPlaces)
