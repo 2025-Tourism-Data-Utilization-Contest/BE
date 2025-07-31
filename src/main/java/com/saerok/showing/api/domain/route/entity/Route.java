@@ -1,6 +1,7 @@
 package com.saerok.showing.api.domain.route.entity;
 
 import com.saerok.showing.api.domain.member.entity.Member;
+import com.saerok.showing.api.domain.poll.entity.Poll;
 import com.saerok.showing.api.domain.route.dto.request.RouteCreateRequest;
 import com.saerok.showing.api.domain.routePlace.entity.RoutePlace;
 import com.saerok.showing.api.global.entity.BaseEntity;
@@ -62,6 +63,10 @@ public class Route extends BaseEntity {
 
     @OneToMany(mappedBy = "route", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RoutePlace> routePlaces = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "poll_id")
+    private Poll poll;
 
     public static Route toEntity(Member member, RouteCreateRequest request) {
         return Route.builder()
