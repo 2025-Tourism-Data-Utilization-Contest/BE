@@ -5,6 +5,8 @@ import com.saerok.showing.api.domain.comment.service.CommentService;
 import com.saerok.showing.api.domain.like.dto.request.LikeToggleRequest;
 import com.saerok.showing.api.domain.like.entity.LikeTargetType;
 import com.saerok.showing.api.domain.member.entity.Member;
+import com.saerok.showing.api.domain.poll.entity.Poll;
+import com.saerok.showing.api.domain.poll.service.PollService;
 import com.saerok.showing.api.domain.post.entity.Post;
 import com.saerok.showing.api.domain.like.entity.Like;
 import com.saerok.showing.api.domain.like.repository.LikeRepository;
@@ -28,27 +30,21 @@ public class LikeService {
     private final PostService postService;
     private final CommentService commentService;
     private final RouteService routeService;
+    private final PollService pollService;
 
     @Transactional
     public boolean toggleLike(LikeToggleRequest request) {
         Member member = loginMemberProvider.getCurrentLoginMember();
         Long targetId = request.getTargetId();
         LikeTargetType type = request.getLikeTargetType();
-        switch (type) {
-            case POST -> {
-                Post post = postService.findById(targetId);
-                return handleToggle(member, request, post);
-            }
-            case COMMENT -> {
-                Comment comment = commentService.findById(targetId);
-                return handleToggle(member, request, comment);
-            }
-            case ROUTE -> {
-                Route route = routeService.findById(targetId);
-                return handleToggle(member, request, route);
-            }
+        return switch (type) {
+            case POST -> handleToggle(member, request, postService.findById(targetId));
+            case COMMENT -> handleToggle(member, request, commentService.findById(targetId));
+            case ROUTE -> handleToggle(member, request, routeService.findById(targetId));
+            case POLL -> handleToggle(member, request, pollService.findById(targetId));
+            case POLL_OPTION -> handleToggleForPollOption(member, request, routeService.findById(targetId));
             default -> throw ShowingException.from(ErrorCode.INVALID_LIKE_TARGET_TYPE);
-        }
+        };
     }
 
     private boolean handleToggle(Member member, LikeToggleRequest request, Post post) {
@@ -82,6 +78,34 @@ public class LikeService {
     private boolean handleToggle(Member member, LikeToggleRequest request, Route route) {
         Optional<Like> existingLike = likeRepository.findByMemberAndTargetIdAndTargetType(
             member, request.getTargetId(), LikeTargetType.ROUTE
+        );
+        if (existingLike.isPresent()) {
+            likeRepository.delete(existingLike.get());
+            route.decreaseLikeCount();
+            return false;
+        }
+        likeRepository.save(Like.toEntity(member, request));
+        route.increaseLikeCount();
+        return true;
+    }
+
+    private boolean handleToggle(Member member, LikeToggleRequest request, Poll poll) {
+        Optional<Like> existingLike = likeRepository.findByMemberAndTargetIdAndTargetType(
+            member, request.getTargetId(), LikeTargetType.POLL
+        );
+        if (existingLike.isPresent()) {
+            likeRepository.delete(existingLike.get());
+            poll.decreaseLikeCount();
+            return false;
+        }
+        likeRepository.save(Like.toEntity(member, request));
+        poll.increaseLikeCount();
+        return true;
+    }
+
+    private boolean handleToggleForPollOption(Member member, LikeToggleRequest request, Route route) {
+        Optional<Like> existingLike = likeRepository.findByMemberAndTargetIdAndTargetType(
+            member, request.getTargetId(), LikeTargetType.POLL_OPTION
         );
         if (existingLike.isPresent()) {
             likeRepository.delete(existingLike.get());

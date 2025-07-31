@@ -35,6 +35,7 @@ public enum ErrorCode {
     MEMBER_NOT_ADMIN(HttpStatus.FORBIDDEN, "관리자 권한이 필요합니다."),
     REVIEW_WRITER_MISMATCH(HttpStatus.FORBIDDEN, "리뷰 작성자가 아닙니다."),
     POST_WRITER_MISMATCH(HttpStatus.FORBIDDEN, "게시글 작성자가 아닙니다."),
+    POLL_MAKER_MISMATCH(HttpStatus.FORBIDDEN, "투표 게시자가 아닙니다."),
     COMMENT_WRITER_MISMATCH(HttpStatus.FORBIDDEN, "댓글 작성자가 아닙니다."),
     ROUTE_MAKER_MISMATCH(HttpStatus.FORBIDDEN, "요청한 여행코스에 대해 접근 권한이 없습니다."),
     NO_TEAM_LEADER_PERMISSION(HttpStatus.FORBIDDEN, "요청한 사항은 팀 리더만 가능합니다."),
@@ -48,6 +49,7 @@ public enum ErrorCode {
     BIRD_NOT_FOUND(HttpStatus.NOT_FOUND, "새를 찾을 수 없습니다."),
     PLACE_NOT_FOUND(HttpStatus.NOT_FOUND, "장소를 찾을 수 없습니다."),
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."),
+    POLL_NOT_FOUND(HttpStatus.NOT_FOUND, "투표를 찾을 수 없습니다."),
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다."),
     ROUTE_NOT_FOUND(HttpStatus.NOT_FOUND, "나만의 경로를 찾을 수 없습니다."),
     ROUTE_PLACE_NOT_FOUND(HttpStatus.NOT_FOUND, "여행코스 내 장소를 찾을 수 없습니다."),
@@ -63,6 +65,7 @@ public enum ErrorCode {
     // 409: CONFLICT (중복된 요청)
     DUPLICATE_RESOURCE(HttpStatus.CONFLICT, "이미 존재하는 리소스입니다."),
     DUPLICATE_MEMBER_EMAIL(HttpStatus.CONFLICT, "이미 사용 중인 이메일입니다."),
+    DUPLICATE_ROUTE_REGISTERED_IN_POLL(HttpStatus.CONFLICT, "이미 해당 투표에 등록된 여행 후보지입니다."),
 
     // 500: INTERNAL SERVER ERROR (서버 내부 오류)
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "내부 서버 오류가 발생했습니다."),
