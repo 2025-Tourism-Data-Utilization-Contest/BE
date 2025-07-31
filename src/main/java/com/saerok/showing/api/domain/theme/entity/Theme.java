@@ -12,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,9 +43,6 @@ public class Theme extends BaseEntity implements Locatable {
     @Column(name = "origin_title", nullable = false)
     private String originTitle;
 
-    @Column(name = "description", nullable = false)
-    private String description;
-
     @ElementCollection
     @CollectionTable(
         name = "theme_season",
@@ -66,11 +64,34 @@ public class Theme extends BaseEntity implements Locatable {
     @Column(name = "theme_image")
     private String themeImage;
 
+    @Column(name = "address", nullable = false)
+    private String address;
+
     @Column(name = "location_x", nullable = false)
     private Double locationX;
 
     @Column(name = "location_y", nullable = false)
     private Double locationY;
+
+    @Column(name = "locationIntro", columnDefinition = "TEXT", nullable = false)
+    private String locationIntro;
+
+    @ElementCollection
+    @CollectionTable(
+        name = "theme_highlight_points",
+        joinColumns = @JoinColumn(name = "theme_id")
+    )
+    @OrderColumn(name = "list_order")
+    @Column(name = "highlight_point", columnDefinition = "TEXT")
+    private List<String> highlightPoints = new ArrayList<>();
+
+    @ElementCollection
+    @CollectionTable(
+        name = "theme_description_blocks",
+        joinColumns = @JoinColumn(name = "theme_id")
+    )
+    @OrderColumn(name = "list_order")
+    private List<DescriptionBlock> descriptionBlocks = new ArrayList<>();
 
     @Override
     public double getLocationX() {
