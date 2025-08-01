@@ -55,7 +55,7 @@ public class TeamController {
             """
     )
     @PreAuthorize("hasRole('MEMBER')")
-    @PostMapping("/{teamId}/join")
+    @PostMapping("/join")
     public ApiResponse<Long> joinTeam(
         @Valid @RequestBody TeamJoinRequest request
     ) {
