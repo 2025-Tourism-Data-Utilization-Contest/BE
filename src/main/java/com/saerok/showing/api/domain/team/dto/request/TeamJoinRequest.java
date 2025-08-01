@@ -12,8 +12,8 @@ import lombok.Setter;
 public class TeamJoinRequest {
 
     @NotNull
-    @Schema(description = "가입할 팀 ID입니다.", example = "1")
-    private Long teamId;
+    @Schema(description = "가입할 팀명을 입력해주세요.", example = "금화초등학교")
+    private String name;
 
     @NotNull
     @Size(min = 4, max = 30)
