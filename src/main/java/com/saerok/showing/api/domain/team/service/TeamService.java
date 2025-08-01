@@ -30,6 +30,7 @@ public class TeamService {
     public Long save(TeamCreateRequest request) {
         Member member = loginMemberProvider.getCurrentLoginMember();
         validateNotAlreadyJoined(member);
+        validateUniqueTeamName(request.getName());
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         Team team = Team.toEntity(request, member, encodedPassword);
         teamRepository.save(team);
@@ -42,7 +43,7 @@ public class TeamService {
     public Long joinTeam(TeamJoinRequest request) {
         Member member = loginMemberProvider.getCurrentLoginMember();
         validateNotAlreadyJoined(member);
-        Team team = findById(request.getTeamId());
+        Team team = findByName(request.getName());
         validateTeamPassword(team, request.getPassword());
         member.joinTeam(team);
         memberRepository.save(member);
@@ -88,6 +89,11 @@ public class TeamService {
             .orElseThrow(() -> ShowingException.from(ErrorCode.TEAM_NOT_FOUND));
     }
 
+    private Team findByName(String name) {
+        return teamRepository.findByName(name)
+            .orElseThrow(() -> ShowingException.from(ErrorCode.TEAM_NOT_FOUND));
+    }
+
     private Team getTeamOfCurrentMember() {
         Member currentMember = loginMemberProvider.getCurrentLoginMember();
         if (currentMember.getTeam() == null) {
@@ -95,6 +101,12 @@ public class TeamService {
         }
         return teamRepository.findByIdWithMembers(currentMember.getTeam().getId())
             .orElseThrow(() -> ShowingException.from(ErrorCode.TEAM_NOT_FOUND));
+    }
+
+    private void validateUniqueTeamName(String name) {
+        if (teamRepository.existsByName(name)) {
+            throw ShowingException.from(ErrorCode.DUPLICATE_TEAM_NAME);
+        }
     }
 
     private void validateNotAlreadyJoined(Member member) {

@@ -65,6 +65,7 @@ public enum ErrorCode {
     // 409: CONFLICT (중복된 요청)
     DUPLICATE_RESOURCE(HttpStatus.CONFLICT, "이미 존재하는 리소스입니다."),
     DUPLICATE_MEMBER_EMAIL(HttpStatus.CONFLICT, "이미 사용 중인 이메일입니다."),
+    DUPLICATE_TEAM_NAME(HttpStatus.CONFLICT, "이미 사용 중인 팀명입니다."),
     DUPLICATE_ROUTE_REGISTERED_IN_POLL(HttpStatus.CONFLICT, "이미 해당 투표에 등록된 여행 후보지입니다."),
 
     // 500: INTERNAL SERVER ERROR (서버 내부 오류)
