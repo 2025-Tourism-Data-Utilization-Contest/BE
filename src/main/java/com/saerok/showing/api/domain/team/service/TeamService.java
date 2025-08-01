@@ -43,7 +43,7 @@ public class TeamService {
     public Long joinTeam(TeamJoinRequest request) {
         Member member = loginMemberProvider.getCurrentLoginMember();
         validateNotAlreadyJoined(member);
-        Team team = findById(request.getTeamId());
+        Team team = findByName(request.getName());
         validateTeamPassword(team, request.getPassword());
         member.joinTeam(team);
         memberRepository.save(member);
