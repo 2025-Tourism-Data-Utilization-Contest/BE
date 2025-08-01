@@ -32,7 +32,9 @@ public class TeamController {
         description = """
             [모든 Role 가능] 새로운 팀을 생성합니다.<br>
             팀을 생성한 사람은 팀리더가 됩니다.<br>
-            이미 팀이 존재하는 회원은 팀 생성을 할 수 없습니다.
+            이미 팀이 존재하는 회원은 팀 생성을 할 수 없습니다.<br>
+            팀명은 2~30글자 이며 중복이 불가능합니다.<br>
+            팀 인증코드는 영문자와 숫자를 조합한 4~30글자입니다.
             """
     )
     @PreAuthorize("hasRole('MEMBER')")
