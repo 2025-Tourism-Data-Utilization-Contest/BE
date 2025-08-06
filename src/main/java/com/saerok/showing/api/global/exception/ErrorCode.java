@@ -15,6 +15,8 @@ public enum ErrorCode {
     UNSUPPORTED_OAUTH2_PROVIDER(HttpStatus.BAD_REQUEST, "지원하지 않는 OAuth2 제공자입니다."),
     INVALID_SOCIAL_TYPE(HttpStatus.BAD_REQUEST, "유효하지 않은 소셜 로그인 타입입니다."),
     INVALID_LIKE_TARGET_TYPE(HttpStatus.BAD_REQUEST, "올바르지 않은 좋아요 대상 타입입니다."),
+    UNSUPPORTED_SORT_TYPE(HttpStatus.BAD_REQUEST, "지원하지 않는 정렬 방식입니다."),
+    INVALID_CURSOR_FORMAT(HttpStatus.BAD_REQUEST, "커서 형식이 잘못되었습니다."),
 
     // 401: UNAUTHORIZED (인증 실패)
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증이 필요합니다."),
