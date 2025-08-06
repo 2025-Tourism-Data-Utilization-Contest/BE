@@ -7,11 +7,11 @@ import com.saerok.showing.api.domain.post.dto.response.PostSummaryResponse;
 import com.saerok.showing.api.domain.post.entity.PostSortType;
 import com.saerok.showing.api.domain.post.entity.PostType;
 import com.saerok.showing.api.domain.post.service.PostService;
+import com.saerok.showing.api.global.pagination.cursorResult.CursorResult;
 import com.saerok.showing.api.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -55,10 +55,10 @@ public class PostController {
     )
     @PreAuthorize("hasRole('MEMBER')")
     @GetMapping("/{postId}")
-    public ApiResponse<PostDetailResponse> getPost(
+    public ApiResponse<PostDetailResponse> getPostDetails(
         @PathVariable(name = "postId") Long postId
     ) {
-        PostDetailResponse response = postService.getPost(postId);
+        PostDetailResponse response = postService.getPostDetails(postId);
         return ApiResponse.success(response);
     }
 
@@ -67,17 +67,26 @@ public class PostController {
         description = """
             [모든 Role 가능] 게시글 타입에 따른 카테고리별 게시글을 조회합니다.<br>
             - 게시글 타입: 일반(NORMAL), 투표(POLL), 여행계획(ROUTE)<br>
-            - `postType` 파라미터를 생략하면 전체 게시글이 조회됩니다.
+            - `postType`을 생략하면 전체 게시글이 조회됩니다.<br>
+            - 정렬 타입: 최신순(LATEST), 인기순(POPULAR)<br>
+            - `sort`을 생략하면 최신순으로 정렬됩니다.<br>
+            
+            📌 커서 기반 페이지네이션 안내<br>
+            - `cursorRaw` : 마지막으로 조회된 게시글의 `createdAt` 값입니다. 이후의 데이터를 조회할 때 사용됩니다.<br>
+            - `limit` : 한 번에 가져올 데이터 수입니다. 기본값은 4이며, 무한 스크롤에 사용됩니다.<br>
+            - 응답에는 다음 페이지 존재 여부(`hasNext`) 및 이전 페이지 존재 여부(`hasPrevious`)가 함께 포함됩니다.
             """
     )
     @PreAuthorize("hasRole('MEMBER')")
     @GetMapping("/list")
-    public ApiResponse<List<PostSummaryResponse>> getAllPosts(
+    public ApiResponse<CursorResult<PostSummaryResponse>> getPosts(
         @RequestParam(name = "postType", required = false) PostType postType,
-        @RequestParam(name = "sort", required = false, defaultValue = "LATEST") PostSortType sortType
+        @RequestParam(name = "sort", required = false, defaultValue = "LATEST") PostSortType sortType,
+        @RequestParam(name = "cursor", required = false) String cursorRaw,
+        @RequestParam(name = "limit", defaultValue = "4") int limit
     ) {
-        List<PostSummaryResponse> response = postService.getAllPosts(postType, sortType);
-        return ApiResponse.success(response);
+        CursorResult<PostSummaryResponse> result = postService.getPosts(postType, sortType, cursorRaw, limit);
+        return ApiResponse.success(result);
     }
 
     @Operation(
