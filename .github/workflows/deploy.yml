@@ -105,7 +105,6 @@ jobs:
             --rm -d \
             -p ${{ secrets.SERVER_PORT }}:${{ secrets.SERVER_PORT }} \
             -e SERVER_PORT=${{ secrets.SERVER_PORT }} \
-            -e SPRING_PROFILES_ACTIVE=${{ secrets.SPRING_PROFILES_ACTIVE }} \
             ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing
 
       # 미사용 이미지 정리
