@@ -8,8 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum PostType {
 
     NORMAL("NORMAL", "일반"),
-    POLL("POLL", "투표"),
-    ROUTE("ROUTE", "여행계획");
+    POLL("POLL", "투표");
 
     private final String key;
     private final String name;

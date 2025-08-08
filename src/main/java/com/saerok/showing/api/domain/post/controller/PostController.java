@@ -66,7 +66,7 @@ public class PostController {
         summary = "게시글 전체 조회",
         description = """
             [모든 Role 가능] 게시글 타입에 따른 카테고리별 게시글을 조회합니다.<br>
-            - 게시글 타입: 일반(NORMAL), 투표(POLL), 여행계획(ROUTE)<br>
+            - 게시글 타입: 일반(NORMAL), 여행계획(ROUTE)<br>
             - `postType`을 생략하면 전체 게시글이 조회됩니다.<br>
             - 정렬 타입: 최신순(LATEST), 인기순(POPULAR)<br>
             - `sort`을 생략하면 최신순으로 정렬됩니다.<br>
@@ -82,7 +82,7 @@ public class PostController {
     public ApiResponse<CursorResult<PostSummaryResponse>> getPosts(
         @RequestParam(name = "postType", required = false) PostType postType,
         @RequestParam(name = "sort", required = false, defaultValue = "LATEST") PostSortType sortType,
-        @RequestParam(name = "cursor", required = false) String cursorRaw,
+        @RequestParam(name = "cursorRaw", required = false) String cursorRaw,
         @RequestParam(name = "limit", defaultValue = "4") int limit
     ) {
         CursorResult<PostSummaryResponse> result = postService.getPosts(postType, sortType, cursorRaw, limit);

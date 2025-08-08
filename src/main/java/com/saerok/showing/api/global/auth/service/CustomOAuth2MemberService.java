@@ -44,13 +44,12 @@ public class CustomOAuth2MemberService extends DefaultOAuth2UserService {
 
     private Member upsertOAuth2Member(OAuth2Response response) {
         return memberRepository.findByEmail(response.getEmail())
-            .map(existing -> updateMember(existing, response.getName()))
+            .map(existing -> updateMember(existing, response))
             .orElseGet(() -> createMember(response));
     }
 
     private Member createMember(OAuth2Response oAuth2Response) {
-        Member member = memberRepository.save(buildMember(oAuth2Response));
-        return member;
+        return memberRepository.save(buildMember(oAuth2Response));
     }
 
     private Member buildMember(OAuth2Response oAuth2Response) {
@@ -64,9 +63,10 @@ public class CustomOAuth2MemberService extends DefaultOAuth2UserService {
             .build();
     }
 
-    private Member updateMember(Member member, String newName) {
-        member.setName(member.getName() == null ? newName : member.getName());
+    private Member updateMember(Member member, OAuth2Response response) {
+        member.setName(member.getName() == null ? response.getName() : member.getName());
         member.setRole(member.getRole() == null ? Role.MEMBER : member.getRole());
-        return member;
+        member.setProfileImage(response.getProfileImage());
+        return memberRepository.save(member);
     }
 }

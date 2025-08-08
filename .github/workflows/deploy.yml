@@ -36,6 +36,7 @@ jobs:
           envsubst < src/main/resources/application.yml.template > src/main/resources/application.yml
         env:
           SERVER_PORT: ${{ secrets.SERVER_PORT }}
+          SPRING_PROFILES_ACTIVE: ${{ secrets.SPRING_PROFILES_ACTIVE }}
           DB_URL: ${{ secrets.DB_URL }}
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
@@ -53,6 +54,7 @@ jobs:
           JWT_REFRESH_TOKEN_EXPIRATION: ${{ secrets.JWT_REFRESH_TOKEN_EXPIRATION }}
           JWT_COOKIE_DOMAIN: ${{ secrets.JWT_COOKIE_DOMAIN }}
           BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+          S3_BASE_URL: ${ secrets.S3_BASE_URL }
           S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
           S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
           CORS_ALLOWED_ORIGINS: ${{ secrets.CORS_ALLOWED_ORIGINS }}
@@ -103,6 +105,7 @@ jobs:
             --rm -d \
             -p ${{ secrets.SERVER_PORT }}:${{ secrets.SERVER_PORT }} \
             -e SERVER_PORT=${{ secrets.SERVER_PORT }} \
+            -e SPRING_PROFILES_ACTIVE=${{ secrets.SPRING_PROFILES_ACTIVE }} \
             ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing
 
       # 미사용 이미지 정리

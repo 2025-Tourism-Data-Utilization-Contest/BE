@@ -53,7 +53,7 @@ public class Member extends BaseEntity {
     private String profileImage;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "login_type")
+    @Column(name = "login_type", nullable = false)
     private LoginType loginType;
 
     @ManyToOne(fetch = FetchType.LAZY)
