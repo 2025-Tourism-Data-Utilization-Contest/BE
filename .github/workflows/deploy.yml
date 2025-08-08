@@ -106,7 +106,3 @@ jobs:
             -p ${{ secrets.SERVER_PORT }}:${{ secrets.SERVER_PORT }} \
             -e SERVER_PORT=${{ secrets.SERVER_PORT }} \
             ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing
-
-      # 미사용 이미지 정리
-      - name: delete old docker image
-        run: sudo docker system prune -f
