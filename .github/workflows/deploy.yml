@@ -72,6 +72,12 @@ jobs:
       - name: docker image build
         run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing .
 
+      # Scan image
+      - name: Scan image
+        uses: anchore/scan-action@v6
+        with:
+          image: "github-actions-showing:latest"
+
       # DockerHub 로그인
       - name: docker login
         uses: docker/login-action@v2
