@@ -76,7 +76,7 @@ jobs:
       - name: Scan image
         uses: anchore/scan-action@v6
         with:
-          image: "github-actions-showing:latest"
+          image: docker-daemon:${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing:latest
 
       # DockerHub 로그인
       - name: docker login
