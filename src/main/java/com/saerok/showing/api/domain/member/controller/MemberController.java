@@ -53,7 +53,7 @@ public class MemberController {
     }
 
     @Operation(
-        summary = "회원 삭제",
+        summary = "회원 탈퇴",
         description = "[모든 Role 가능] 회원을 탈퇴합니다."
     )
     @PreAuthorize("hasRole('MEMBER')")
