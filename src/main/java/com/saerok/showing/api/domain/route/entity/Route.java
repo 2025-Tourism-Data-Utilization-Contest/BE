@@ -85,6 +85,13 @@ public class Route extends BaseEntity {
         }
     }
 
+    public void updateTitle(String title) {
+        if (title == null || title.isBlank()) {
+            throw ShowingException.from(ErrorCode.INVALID_ROUTE_TITLE);
+        }
+        this.title = title;
+    }
+
     public void increaseLikeCount() {
         this.likeCount++;
     }

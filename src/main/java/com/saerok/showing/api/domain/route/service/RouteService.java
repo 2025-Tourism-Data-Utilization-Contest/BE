@@ -3,6 +3,7 @@ package com.saerok.showing.api.domain.route.service;
 import com.saerok.showing.api.domain.member.entity.Member;
 import com.saerok.showing.api.domain.place.dto.response.PlaceSummaryResponse;
 import com.saerok.showing.api.domain.route.dto.request.RouteCreateRequest;
+import com.saerok.showing.api.domain.route.dto.request.RouteUpdateRequest;
 import com.saerok.showing.api.domain.route.dto.response.RouteSummaryResponse;
 import com.saerok.showing.api.domain.route.entity.Route;
 import com.saerok.showing.api.domain.route.repository.RouteRepository;
@@ -28,6 +29,15 @@ public class RouteService {
         Member member = loginMemberProvider.getCurrentLoginMember();
         Route route = Route.toEntity(member, request);
         return routeRepository.save(route).getId();
+    }
+
+    @Transactional
+    public Long update(Long routeId, RouteUpdateRequest request) {
+        Member currentMember = loginMemberProvider.getCurrentLoginMember();
+        Route route = findById(routeId);
+        route.validateOwner(currentMember);
+        route.updateTitle(request.getTitle());
+        return route.getId();
     }
 
     @Transactional(readOnly = true)
