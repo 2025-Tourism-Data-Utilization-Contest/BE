@@ -12,8 +12,8 @@ import lombok.Setter;
 public class RoutePlaceCreateRequest {
 
     @NotNull
-    @Schema(description = "추가할 장소의 ID", example = "1")
-    private Long placeId;
+    @Schema(description = "추가할 장소의 이름", example = "엘리시안 강촌 리조트")
+    private String placeName;
 
     @Min(1)
     @Max(30)

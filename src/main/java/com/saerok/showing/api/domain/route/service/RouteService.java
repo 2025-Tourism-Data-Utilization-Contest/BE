@@ -41,7 +41,7 @@ public class RouteService {
                     .sorted(Comparator.comparingInt(RoutePlace::getDayNumber)
                         .thenComparingInt(RoutePlace::getOrderInDay))
                     .limit(3)
-                    .map(routePlace -> PlaceSummaryResponse.create(routePlace.getPlace()))
+                    .map(routePlace -> PlaceSummaryResponse.create(routePlace.getPlaceName()))
                     .toList();
 
                 return RouteSummaryResponse.toDto(route, topPlaces);

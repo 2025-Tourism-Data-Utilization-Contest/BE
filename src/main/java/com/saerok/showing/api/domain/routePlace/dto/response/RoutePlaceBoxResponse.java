@@ -8,23 +8,20 @@ import lombok.Getter;
 @Builder
 public class RoutePlaceBoxResponse {
 
-    private Long id;
-
     private String title;
 
     private int dayNumber;
 
     private int orderInDay;
 
-    private String imageUrl;
+//    private String imageUrl;
 
     public static RoutePlaceBoxResponse toDto(RoutePlace routePlace) {
         return RoutePlaceBoxResponse.builder()
-            .id(routePlace.getId())
-            .title(routePlace.getPlace().getTitle())
+            .title(routePlace.getPlaceName())
             .dayNumber(routePlace.getDayNumber())
             .orderInDay(routePlace.getOrderInDay())
-            .imageUrl(routePlace.getPlace().getPlaceImage())
+//            .imageUrl(routePlace.getPlace().getPlaceImage())
             .build();
     }
 }
