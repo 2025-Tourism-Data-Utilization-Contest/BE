@@ -11,15 +11,22 @@ import lombok.Setter;
 @Setter
 public class RoutePlaceUpdateRequest {
 
-    @Min(1)
-    @Max(30)
-    @NotNull
-    @Schema(description = "여행 경로에서 해당 장소의 방문 일자(Day N)를 수정합니다, N은 1~30의 값입니다.", example = "1")
-    private int dayNumber;
+    @Min(1) @Max(30) @NotNull
+    @Schema(description = "기존 일차(이동 전)", example = "1")
+    private Integer oldDayNumber;
 
-    @Min(1)
-    @Max(30)
-    @NotNull
-    @Schema(description = "해당 일자 내에서 장소 방문 순서를 수정합니다. 1~30의 값을 가집니다.", example = "1")
-    private int orderInDay;
+    @Min(1) @Max(30) @NotNull
+    @Schema(description = "기존 순서(이동 전)", example = "2")
+    private Integer oldOrderInDay;
+
+    @Min(1) @Max(30) @NotNull
+    @Schema(description = "새 일차(이동 후)", example = "1")
+    private Integer dayNumber;
+
+    @Min(1) @Max(30) @NotNull
+    @Schema(description = "새 순서(이동 후)", example = "1")
+    private Integer orderInDay;
+
+    @Schema(description = "장소 이름", example = "엘리시안 강촌 리조트")
+    private String placeName;
 }
