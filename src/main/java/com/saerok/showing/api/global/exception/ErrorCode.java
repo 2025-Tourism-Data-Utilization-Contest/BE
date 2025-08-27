@@ -17,6 +17,8 @@ public enum ErrorCode {
     INVALID_LIKE_TARGET_TYPE(HttpStatus.BAD_REQUEST, "올바르지 않은 좋아요 대상 타입입니다."),
     UNSUPPORTED_SORT_TYPE(HttpStatus.BAD_REQUEST, "지원하지 않는 정렬 방식입니다."),
     INVALID_CURSOR_FORMAT(HttpStatus.BAD_REQUEST, "커서 형식이 잘못되었습니다."),
+    INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "유효하지 않은 입력 값입니다."),
+    INVALID_ROUTE_TITLE(HttpStatus.BAD_REQUEST, "여행코스 제목이 비어 있거나 올바르지 않습니다."),
 
     // 401: UNAUTHORIZED (인증 실패)
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증이 필요합니다."),

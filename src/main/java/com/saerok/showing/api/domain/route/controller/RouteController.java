@@ -1,6 +1,7 @@
 package com.saerok.showing.api.domain.route.controller;
 
 import com.saerok.showing.api.domain.route.dto.request.RouteCreateRequest;
+import com.saerok.showing.api.domain.route.dto.request.RouteUpdateRequest;
 import com.saerok.showing.api.domain.route.service.RouteService;
 import com.saerok.showing.api.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/route")
 @RequiredArgsConstructor
-@Tag(name = "Route", description = "여행코스 생성/삭제")
+@Tag(name = "Route", description = "여행코스 관리")
 public class RouteController {
 
     private final RouteService routeService;
@@ -37,6 +39,23 @@ public class RouteController {
         @Valid @RequestBody RouteCreateRequest request
     ) {
         Long id = routeService.save(request);
+        return ApiResponse.success(id);
+    }
+
+    @Operation(
+        summary = "여행코스 수정",
+        description = """
+            [모든 Role 가능] 여행코스의 제목을 수정합니다.<br>
+            본인이 생성한 여행코스만 수정할 수 있으며, 1~50자 길이의 여행코스 제목으로만 수정이 가능합니다.
+            """
+    )
+    @PreAuthorize("hasRole('MEMBER')")
+    @PatchMapping("/{routeId}")
+    public ApiResponse<Long> updateRoute(
+        @PathVariable(name = "routeId") Long routeId,
+        @Valid @RequestBody RouteUpdateRequest request
+    ) {
+        Long id = routeService.update(routeId, request);
         return ApiResponse.success(id);
     }
 
