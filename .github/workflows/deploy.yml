@@ -80,11 +80,11 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       # Scan image
-      - name: Scan image
-        uses: anchore/scan-action@v6
-        with:  
-          image: ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing:latest
-          output-format: table
+#      - name: Scan image
+#        uses: anchore/scan-action@v6
+#        with:  
+#          image: ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing:latest
+#          output-format: table
 
       # Docker Hub 이미지 푸시
       - name: docker Hub push
