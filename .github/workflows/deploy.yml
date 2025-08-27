@@ -79,37 +79,32 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      # Scan image
-#      - name: Scan image
-#        uses: anchore/scan-action@v6
-#        with:  
-#          image: ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing:latest
-#          output-format: table
-
       # Docker Hub 이미지 푸시
       - name: docker Hub push
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing
 
   run-docker-image-on-ec2:
-    # build-docker-image 과정이 완료되어야 실행
     needs: build-docker-image
     runs-on: self-hosted
 
     steps:
-      # 최신 이미지를 pull
+      - name: ensure network exists
+        run: sudo docker network inspect app-net >/dev/null 2>&1 || sudo docker network create app-net
+
       - name: docker pull
-        run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing
+        run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing:latest
 
-      # 기존의 컨테이너 중지
-      - name: docker stop container
-        run: sudo docker stop spring 2>/dev/null || true
-
-      # 최신 이미지를 컨테이너화하여 실행
-      - name: docker run new container
+      - name: stop & remove previous
         run: |
-          sudo docker run --name spring \
-            --network app_showing-network \
-            --rm -d \
+          sudo docker stop spring 2>/dev/null || true
+          sudo docker rm spring 2>/dev/null || true
+
+      - name: run spring on same network as redis
+        run: |
+          sudo docker run -d --name spring \
+            --network app-net \
+            --restart unless-stopped \
             -p ${{ secrets.SERVER_PORT }}:${{ secrets.SERVER_PORT }} \
             -e SERVER_PORT=${{ secrets.SERVER_PORT }} \
-            ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing
+            -e SPRING_PROFILES_ACTIVE=${{ secrets.SPRING_PROFILES_ACTIVE }} \
+            ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing:latest
