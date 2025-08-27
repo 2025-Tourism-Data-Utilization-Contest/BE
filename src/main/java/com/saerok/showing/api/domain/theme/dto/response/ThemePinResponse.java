@@ -13,6 +13,8 @@ public class ThemePinResponse {
 
     private Long id;
 
+    private String title;
+
     private List<Season> seasons;
 
     private List<DayTime> dayTimes;
@@ -24,6 +26,7 @@ public class ThemePinResponse {
     public static ThemePinResponse toDto(Theme theme) {
         return ThemePinResponse.builder()
             .id(theme.getId())
+            .title(theme.getTitle())
             .seasons(theme.getSeasons())
             .dayTimes(theme.getDayTimes())
             .locationX(theme.getLocationX())

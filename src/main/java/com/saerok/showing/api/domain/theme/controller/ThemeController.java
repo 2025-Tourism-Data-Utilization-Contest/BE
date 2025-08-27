@@ -27,7 +27,11 @@ public class ThemeController {
 
     @Operation(
         summary = "조건별 테마 조회",
-        description = "[모든 Role 가능] 계절과 시간대 조건으로 테마 목록을 조회합니다."
+        description = """
+            [모든 Role 가능] 계절과 시간대 조건으로 테마 목록을 조회합니다.<br>
+            Season: SPRING(봄), SUMMER(여름), AUTUMN(가을), WINTER(겨울)<br>
+            DayTime: DAY(낮), NIGHT(밤)
+            """
     )
     @PreAuthorize("hasRole('MEMBER')")
     @GetMapping("")
