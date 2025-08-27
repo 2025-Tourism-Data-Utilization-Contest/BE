@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -68,13 +69,12 @@ public class RoutePlaceController {
             """
     )
     @PreAuthorize("hasRole('MEMBER')")
-    @PatchMapping("/{routeId}/places/{routePlaceId}")
+    @PatchMapping("/{routeId}/places")
     public ApiResponse<Long> updateRoutePlace(
         @PathVariable Long routeId,
-        @PathVariable Long routePlaceId,
         @Valid @RequestBody RoutePlaceUpdateRequest request
     ) {
-        Long updatedId = routePlaceService.updateRoutePlace(routeId, routePlaceId, request);
+        Long updatedId = routePlaceService.updateRoutePlace(routeId, request);
         return ApiResponse.success(updatedId);
     }
 
@@ -82,16 +82,19 @@ public class RoutePlaceController {
         summary = "여행코스 내 장소 삭제",
         description = """
             [모든 Role 가능] 특정 여행코스에서 지정한 장소(routePlace)를 삭제합니다.<br>
+            장소는 여행 일자(dayNumber)와 해당 일자의 순서(orderInDay)를 입력받아 삭제합니다.<br>
             장소를 삭제하면 해당 일차의 나머지 순서에는 영향을 주지 않습니다.
             """
     )
     @PreAuthorize("hasRole('MEMBER')")
-    @DeleteMapping("/{routeId}/places/{routePlaceId}")
+    @DeleteMapping("/{routeId}/places")
     public ApiResponse<Long> deleteRoutePlace(
         @PathVariable Long routeId,
-        @PathVariable Long routePlaceId
+        @RequestParam int dayNumber,
+        @RequestParam int orderInDay
+
     ) {
-        Long deletedId = routePlaceService.deleteRoutePlace(routeId, routePlaceId);
+        Long deletedId = routePlaceService.deleteRoutePlace(routeId, dayNumber, orderInDay);
         return ApiResponse.success(deletedId);
     }
 }
