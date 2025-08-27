@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PlaceRepository extends JpaRepository<Place, Long> {
 
+    Place findByTitleContainingIgnoreCase(String title);
+
     @Query("""
             SELECT p FROM Place p
             WHERE p.locationY BETWEEN :minLat AND :maxLat
