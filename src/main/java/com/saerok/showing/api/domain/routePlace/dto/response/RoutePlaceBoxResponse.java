@@ -8,8 +8,6 @@ import lombok.Getter;
 @Builder
 public class RoutePlaceBoxResponse {
 
-    private Long id;
-
     private String title;
 
     private int dayNumber;
@@ -20,7 +18,6 @@ public class RoutePlaceBoxResponse {
 
     public static RoutePlaceBoxResponse toDto(RoutePlace routePlace) {
         return RoutePlaceBoxResponse.builder()
-            .id(routePlace.getId())
             .title(routePlace.getPlaceName())
             .dayNumber(routePlace.getDayNumber())
             .orderInDay(routePlace.getOrderInDay())
