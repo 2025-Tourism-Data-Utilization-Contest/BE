@@ -45,8 +45,8 @@ public class RouteController {
     @Operation(
         summary = "여행코스 수정",
         description = """
-            [MEMBER] 여행코스의 제목을 수정합니다.<br>
-            본인이 생성한 여행코스만 수정할 수 있으며, 1~50자 내의 이름만 가능합니다.
+            [모든 Role 가능] 여행코스의 제목을 수정합니다.<br>
+            본인이 생성한 여행코스만 수정할 수 있으며, 1~50자 길이의 여행코스 제목으로만 수정이 가능합니다.
             """
     )
     @PreAuthorize("hasRole('MEMBER')")
