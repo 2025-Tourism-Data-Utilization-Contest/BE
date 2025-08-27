@@ -1,6 +1,5 @@
 package com.saerok.showing.api.domain.routePlace.entity;
 
-import com.saerok.showing.api.domain.place.entity.Place;
 import com.saerok.showing.api.domain.route.entity.Route;
 import com.saerok.showing.api.domain.routePlace.dto.request.RoutePlaceCreateRequest;
 import com.saerok.showing.api.domain.routePlace.dto.request.RoutePlaceUpdateRequest;
@@ -41,9 +40,8 @@ public class RoutePlace extends BaseEntity {
     @JoinColumn(name = "route_id", nullable = false)
     private Route route;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "place_id", nullable = false)
-    private Place place;
+    @Column(name = "place_name", nullable = false)
+    private String placeName;
 
     @Column(name = "day_number", nullable = false)
     private int dayNumber;
@@ -51,10 +49,10 @@ public class RoutePlace extends BaseEntity {
     @Column(name = "order_in_day", nullable = false)
     private int orderInDay;
 
-    public static RoutePlace toEntity(RoutePlaceCreateRequest request, Route route, Place place) {
+    public static RoutePlace toEntity(RoutePlaceCreateRequest request, Route route, String PlaceName) {
         return RoutePlace.builder()
             .route(route)
-            .place(place)
+            .placeName(PlaceName)
             .dayNumber(request.getDayNumber())
             .orderInDay(request.getOrderInDay())
             .build();
@@ -63,6 +61,23 @@ public class RoutePlace extends BaseEntity {
     public void update(RoutePlaceUpdateRequest request) {
         this.dayNumber = request.getDayNumber();
         this.orderInDay = request.getOrderInDay();
+        this.placeName = request.getPlaceName();
+    }
+
+    // 같은 day 내 임시 파킹 (유니크 충돌 방지용)
+    public void parkOrder() {
+        this.orderInDay = -1;
+    }
+
+    // 같은 day 내에서 새로운 order로 이동
+    public void placeAt(int newOrder) {
+        this.orderInDay = newOrder;
+    }
+
+    // 다른 day로 이동하며 order도 설정
+    public void moveTo(int newDay, int newOrder) {
+        this.dayNumber = newDay;
+        this.orderInDay = newOrder;
     }
 
     public void validateBelongsTo(Route route) {
