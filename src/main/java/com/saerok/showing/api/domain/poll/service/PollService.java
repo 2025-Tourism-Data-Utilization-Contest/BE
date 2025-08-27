@@ -42,7 +42,7 @@ public class PollService {
         List<RouteSummaryResponse> routeSummaries = poll.getRouteOptions().stream()
             .map(route -> {
                 List<PlaceSummaryResponse> placeSummaries = route.getRoutePlaces().stream()
-                    .map(routePlace -> PlaceSummaryResponse.create(routePlace.getPlace()))
+                    .map(routePlace -> PlaceSummaryResponse.create(routePlace.getPlaceName()))
                     .toList();
                 return RouteSummaryResponse.toDto(route, placeSummaries);
             })
