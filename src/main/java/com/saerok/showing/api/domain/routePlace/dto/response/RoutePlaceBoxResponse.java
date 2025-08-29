@@ -1,6 +1,7 @@
 package com.saerok.showing.api.domain.routePlace.dto.response;
 
 import com.saerok.showing.api.domain.routePlace.entity.RoutePlace;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -14,6 +15,10 @@ public class RoutePlaceBoxResponse {
 
     private int orderInDay;
 
+    private String contentId;
+
+    private String contentTypeId;
+
 //    private String imageUrl;
 
     public static RoutePlaceBoxResponse toDto(RoutePlace routePlace) {
@@ -21,6 +26,8 @@ public class RoutePlaceBoxResponse {
             .title(routePlace.getPlaceName())
             .dayNumber(routePlace.getDayNumber())
             .orderInDay(routePlace.getOrderInDay())
+            .contentId(routePlace.getContentId())
+            .contentTypeId(routePlace.getContentTypeId())
 //            .imageUrl(routePlace.getPlace().getPlaceImage())
             .build();
     }
