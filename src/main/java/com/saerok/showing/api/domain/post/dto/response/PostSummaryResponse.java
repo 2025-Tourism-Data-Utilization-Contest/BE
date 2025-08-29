@@ -2,6 +2,7 @@ package com.saerok.showing.api.domain.post.dto.response;
 
 import com.saerok.showing.api.domain.post.entity.Post;
 import com.saerok.showing.api.domain.post.entity.PostType;
+import com.saerok.showing.api.domain.post.entity.PostVisibility;
 import com.saerok.showing.api.global.file.dto.ExternalFileResponse;
 import com.saerok.showing.api.global.file.entity.UploadedFile;
 import com.saerok.showing.api.global.pagination.provider.CreatedAtProvider;
@@ -26,6 +27,8 @@ public class PostSummaryResponse implements CreatedAtProvider, PopularProvider {
     private String content;
 
     private ExternalFileResponse postImage;
+
+    private PostVisibility visibility;
 
     private PostType postType;
 
@@ -58,6 +61,7 @@ public class PostSummaryResponse implements CreatedAtProvider, PopularProvider {
             .writerProfileImage(post.getMember().getProfileImage())
             .content(post.getContent())
             .postImage(imageDto)
+            .visibility(post.getVisibility())
             .postType(post.getPostType())
             .likeCount(post.getLikeCount())
             .commentCount(commentCount)
