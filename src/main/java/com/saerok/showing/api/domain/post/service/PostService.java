@@ -2,6 +2,7 @@ package com.saerok.showing.api.domain.post.service;
 
 import com.saerok.showing.api.domain.comment.service.CommentCountProvider;
 import com.saerok.showing.api.domain.member.entity.Member;
+import com.saerok.showing.api.domain.memberTeam.service.MemberTeamService;
 import com.saerok.showing.api.domain.post.dto.request.PostCreateRequest;
 import com.saerok.showing.api.domain.post.dto.request.PostUpdateRequest;
 import com.saerok.showing.api.domain.post.dto.response.PostDetailResponse;
@@ -18,7 +19,9 @@ import com.saerok.showing.api.global.exception.ShowingException;
 import com.saerok.showing.api.global.file.entity.UploadedFile;
 import com.saerok.showing.api.global.file.service.FileService;
 import com.saerok.showing.api.global.pagination.cursorResult.CursorResult;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,10 +31,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final LoginMemberProvider loginMemberProvider;
     private final FileService fileService;
-    private final PostPaginationStrategyFactory postPaginationStrategyFactory;
+    private final MemberTeamService memberTeamService;
+    private final LoginMemberProvider loginMemberProvider;
     private final CommentCountProvider commentCountProvider;
+    private final PostPaginationStrategyFactory postPaginationStrategyFactory;
 
     @Transactional
     public Long save(PostCreateRequest request) {
@@ -44,7 +48,10 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public PostDetailResponse getPostDetails(Long postId) {
+        Member currentMember = loginMemberProvider.getCurrentLoginMember();
+        List<Long> teamIds = memberTeamService.getTeamIdsByMemberId(currentMember.getId());
         Post post = findById(postId);
+        validatePostVisibility(post, teamIds);
         int commentCount = commentCountProvider.getCount(postId);
         return PostDetailResponse.toDto(post, commentCount);
     }
@@ -56,8 +63,10 @@ public class PostService {
         String cursorRaw,
         int limit
     ) {
+        Member currentMember = loginMemberProvider.getCurrentLoginMember();
+        List<Long> teamIds = memberTeamService.getTeamIdsByMemberId(currentMember.getId());
         PostPaginationStrategy strategy = postPaginationStrategyFactory.getStrategy(sortType);
-        return strategy.getCursorResult(postType, cursorRaw, limit, commentCountProvider);
+        return strategy.getCursorResult(postType, cursorRaw, limit, teamIds, commentCountProvider);
     }
 
     @Transactional
@@ -76,6 +85,16 @@ public class PostService {
         post.validateOwner(member);
         postRepository.delete(post);
         return postId;
+    }
+
+    private void validatePostVisibility(Post post, List<Long> viewerTeamIds) {
+        if (post.getVisibility().isTeamOnly()) {
+            Set<Long> authorTeamIds = new HashSet<>(memberTeamService.getTeamIdsByMemberId(post.getMember().getId()));
+            viewerTeamIds.stream()
+                .filter(authorTeamIds::contains)
+                .findAny()
+                .orElseThrow(() -> ShowingException.from(ErrorCode.FORBIDDEN));
+        }
     }
 
     public int getPostCount() {

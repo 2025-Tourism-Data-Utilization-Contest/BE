@@ -43,15 +43,20 @@ public class PopularPostPaginationStrategy implements PostPaginationStrategy {
     }
 
     @Override
-    public List<Post> paginate(PostType postType, Object cursor, int limit) {
-        if (cursor instanceof PopularCursor c) {
-            return postRepository.findByPopularCursor(postType, c.likeCount(), c.createdAt()).stream()
+    public List<Post> paginate(PostType postType, Object cursor, int limit, List<Long> teamIds) {
+        if (cursor == null) {
+            return postRepository.findVisiblePostsOrderByLikeCountDesc(postType, teamIds)
+                .stream()
                 .limit(limit + 1)
                 .toList();
         }
-        return postRepository.findByPostTypeOrderByLikeCountDesc(postType).stream()
-            .limit(limit + 1)
-            .toList();
+        if (cursor instanceof PopularCursor c) {
+            return postRepository.findVisiblePostsByPopularCursor(postType, c.likeCount(), c.createdAt(), teamIds)
+                .stream()
+                .limit(limit + 1)
+                .toList();
+        }
+        throw ShowingException.from(ErrorCode.INVALID_CURSOR_FORMAT);
     }
 
     @Override
@@ -59,10 +64,11 @@ public class PopularPostPaginationStrategy implements PostPaginationStrategy {
         PostType postType,
         String cursorRaw,
         int limit,
+        List<Long> teamIds,
         CommentCountProvider commentCountProvider
     ) {
         PopularCursor cursor = (PopularCursor) parseCursor(cursorRaw);
-        List<Post> posts = paginate(postType, cursor, limit);
+        List<Post> posts = paginate(postType, cursor, limit, teamIds);
         List<PostSummaryResponse> responses = posts.stream()
             .map(post -> PostSummaryResponse.toDto(post, commentCountProvider.getCount(post.getId())))
             .toList();

@@ -84,13 +84,15 @@ public class TeamController {
         summary = "팀 내 팀원 목록 조회",
         description = """
             [모든 Role 가능] 팀에 속한 팀원들을 조회합니다.<br>
-            먼저 가입한 순으로 정렬되며, 팀리더가 제일먼저입니다.
+            먼저 가입한 순으로 정렬되며, 팀리더가 가장 먼저 조회됩니다.
             """
     )
     @PreAuthorize("hasRole('MEMBER')")
-    @GetMapping("/members")
-    public ApiResponse<List<TeamMemberResponse>> getMyTeamMembers() {
-        List<TeamMemberResponse> members = teamService.getMyTeamMembers();
+    @GetMapping("/{teamId}/members")
+    public ApiResponse<List<TeamMemberResponse>> getTeamMembers(
+        @PathVariable Long teamId
+    ) {
+        List<TeamMemberResponse> members = teamService.getTeamMembers(teamId);
         return ApiResponse.success(members);
     }
 

@@ -52,6 +52,10 @@ public class Post extends BaseEntity {
     private String title;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "visibility", nullable = false)
+    private PostVisibility visibility = PostVisibility.VISIBLE_ALL;
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "post_type", nullable = false)
     private PostType postType;
 
@@ -74,6 +78,7 @@ public class Post extends BaseEntity {
         return Post.builder()
             .member(member)
             .title(request.getTitle())
+            .visibility(request.getVisibility())
             .postType(request.getPostType())
             .content(request.getContent())
             .postImages(files)
@@ -91,6 +96,8 @@ public class Post extends BaseEntity {
     public void update(PostUpdateRequest request) {
         this.title = request.getTitle();
         this.content = request.getContent();
+        this.visibility = request.getVisibility();
+        this.hashtags = request.getHashtags();
     }
 
     public void increaseLikeCount() {

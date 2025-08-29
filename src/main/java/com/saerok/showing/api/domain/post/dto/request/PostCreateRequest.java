@@ -1,6 +1,7 @@
 package com.saerok.showing.api.domain.post.dto.request;
 
 import com.saerok.showing.api.domain.post.entity.PostType;
+import com.saerok.showing.api.domain.post.entity.PostVisibility;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -16,6 +17,10 @@ public class PostCreateRequest {
     @Size(max = 100, message = "게시글 제목은 최대 100자까지 입력할 수 있습니다.")
     @Schema(description = "게시글 제목", example = "순천만 습지 다녀온 썰")
     private String title;
+
+    @NotNull
+    @Schema(description = "게시글 가시성", example = "TEAM_ONLY")
+    private PostVisibility visibility;
 
     @NotNull
     @Schema(description = "게시글 타입", example = "NORMAL")
