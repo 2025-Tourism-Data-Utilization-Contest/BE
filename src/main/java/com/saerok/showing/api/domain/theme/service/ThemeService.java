@@ -1,6 +1,6 @@
 package com.saerok.showing.api.domain.theme.service;
 
-import com.saerok.showing.api.domain.bird.dto.response.BirdSummaryResponse;
+import com.saerok.showing.api.domain.birdTheme.dto.response.BirdThemeResponse;
 import com.saerok.showing.api.domain.birdTheme.service.BirdThemeService;
 import com.saerok.showing.api.domain.place.dto.response.AttractionPlaceSummaryResponse;
 import com.saerok.showing.api.domain.place.dto.response.ExperiencePlaceSummaryResponse;
@@ -48,7 +48,7 @@ public class ThemeService {
     @Transactional(readOnly = true)
     public ThemeDetailResponse getTheme(Long themeId) {
         Theme theme = findById(themeId);
-        List<BirdSummaryResponse> birds = birdThemeService.getBirdNames(themeId);
+        List<BirdThemeResponse> birds = birdThemeService.getBirdsByTheme(themeId);
         List<Place> nearbyPlaces = getNearbyPlacesFromTheme(themeId, NEARBY_RADIUS_METERS, NEARBY_LIMIT);
 
         // 필터링된 결과에서 유형별로 매핑

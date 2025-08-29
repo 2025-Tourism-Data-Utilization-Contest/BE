@@ -34,7 +34,8 @@ public class MockDataInitializer {
         "data/01-member.sql",
         "data/02-bird.sql",
         "data/03-theme.sql",
-        "data/04-post.sql"
+        "data/04-bird-theme.sql",
+        "data/05-post.sql"
     };
 
     @PostConstruct
