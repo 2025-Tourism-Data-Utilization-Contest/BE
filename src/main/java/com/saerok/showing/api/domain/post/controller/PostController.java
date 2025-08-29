@@ -37,7 +37,8 @@ public class PostController {
         description = """
             [모든 Role 가능] 게시글을 작성합니다.<br>
             요청 본문에는 제목, 내용, 게시글 타입, 게시글 이미지(리스트), 해시태그(리스트)가 포함됩니다.<br>
-            게시글 이미지는 "/api/v1/file/post"를 이용하여 얻은 fileUrl값들을 입력해주세요.
+            게시글 이미지는 "/api/v1/file/post"를 이용하여 얻은 fileUrl값들을 입력해주세요.<br>
+            전체 공개는 VISIBLE_ALL, 팀만 공개는 TEAM_ONLY로 visibility를 지정해주세요.
             """
     )
     @PreAuthorize("hasRole('MEMBER')")

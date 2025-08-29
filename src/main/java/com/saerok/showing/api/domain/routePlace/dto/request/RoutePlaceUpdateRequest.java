@@ -29,4 +29,10 @@ public class RoutePlaceUpdateRequest {
 
     @Schema(description = "장소 이름", example = "엘리시안 강촌 리조트")
     private String placeName;
+
+    @Schema(description = "TourAPI 조회용 pk값 1", example = "1")
+    private String contentId;
+
+    @Schema(description = "TourAPI 조회용 pk값 2", example = "1")
+    private String contentTypeId;
 }
