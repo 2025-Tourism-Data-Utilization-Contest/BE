@@ -12,6 +12,11 @@ FROM openjdk:21-jdk-slim
 WORKDIR /app
 COPY --from=build /app/build/libs/*.jar app.jar
 
-EXPOSE 8080
+# 기본값 (없으면 local로 실행되도록)
+ENV SERVER_PORT=8080
+ENV SPRING_PROFILES_ACTIVE=dev
 
-ENTRYPOINT ["java", "-Dspring.profiles.active=dev", "-jar", "app.jar"]
+EXPOSE ${SERVER_PORT}
+
+# 환경변수를 동적으로 받아 실행
+ENTRYPOINT ["sh", "-c", "java -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE} -Dserver.port=${SERVER_PORT} -jar app.jar"]
