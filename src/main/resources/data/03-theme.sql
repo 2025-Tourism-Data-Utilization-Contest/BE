@@ -97,7 +97,7 @@ FROM inserted_theme, (
     insert_season AS (
 INSERT
 INTO theme_season (theme_id, season)
-SELECT theme_id, unnest(ARRAY['SPRING', 'SUMMER', 'AUTUMN', 'WINTER'])
+SELECT theme_id, unnest(ARRAY['SUMMER'])
 FROM inserted_theme
     ),
 
@@ -279,7 +279,7 @@ FROM inserted_theme, (
     insert_season AS (
 INSERT
 INTO theme_season (theme_id, season)
-SELECT theme_id, unnest(ARRAY['SPRING', 'AUTUMN'])
+SELECT theme_id, unnest(ARRAY['SPRING'])
 FROM inserted_theme
     ),
 
@@ -340,7 +340,7 @@ FROM inserted_theme, (
     insert_season AS (
 INSERT
 INTO theme_season (theme_id, season)
-SELECT theme_id, unnest(ARRAY['SPRING', 'AUTUMN'])
+SELECT theme_id, unnest(ARRAY['AUTUMN'])
 FROM inserted_theme
     ),
 
@@ -399,7 +399,7 @@ FROM inserted_theme, (
     insert_season AS (
 INSERT
 INTO theme_season (theme_id, season)
-SELECT theme_id, unnest(ARRAY['SPRING', 'SUMMER'])
+SELECT theme_id, unnest(ARRAY['SPRING'])
 FROM inserted_theme
     ),
 
