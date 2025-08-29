@@ -34,6 +34,7 @@ jobs:
         run: |
           cp src/main/resources/application.yml.template src/main/resources/application.yml
           envsubst < src/main/resources/application.yml.template > src/main/resources/application.yml
+          cat src/main/resources/application.yml
         env:
           SERVER_PORT: ${{ secrets.SERVER_PORT }}
           SPRING_PROFILES_ACTIVE: ${{ secrets.SPRING_PROFILES_ACTIVE }}
