@@ -3,7 +3,6 @@ package com.saerok.showing.api.domain.team.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,11 +15,10 @@ public class TeamJoinRequest {
     private String name;
 
     @NotNull
-    @Size(min = 4, max = 30)
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{4,30}$")
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d)[A-Z\\d]{6}$")
     @Schema(
-        description = "팀 입장 시 사용하는 비밀번호입니다. 영문자와 숫자를 조합한 4~30자입니다.",
-        example = "team2025"
+        description = "팀 인증코드입니다. 영문 대문자와 숫자를 조합한 정확히 6자리 문자열이어야 합니다.",
+        example = "show25"
     )
     private String password;
 }
