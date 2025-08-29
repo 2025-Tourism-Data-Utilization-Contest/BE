@@ -108,8 +108,10 @@ jobs:
         run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing
 
       # 기존의 컨테이너 중지
-      - name: docker stop container
-        run: sudo docker stop spring 2>/dev/null || true
+      - name: stop & remove previous spring
+        run: |
+          sudo docker stop spring 2>/dev/null || true
+          sudo docker rm spring 2>/dev/null || true
 
       # 최신 이미지를 컨테이너화하여 실행
       - name: docker run new container
