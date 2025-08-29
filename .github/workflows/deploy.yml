@@ -1,6 +1,5 @@
-name: Java CI/CD with GradleMore actions
+name: Java CI/CD with Gradle
 
-# develop 브랜치에 push가 발생할 경우 동작
 on:
   push:
     branches: [ "develop" ]
@@ -10,26 +9,25 @@ permissions:
   contents: read
 
 jobs:
-  # Spring Boot 애플리케이션을 빌드하여 도커허브에 푸시하는 과정
   build-docker-image:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
-      # Java 21 세팅
+      # JDK 21 세팅
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'temurin'
 
-      # Spring Boot 애플리케이션 빌드
+      # Gradle 빌드
       - name: Build with Gradle
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
         with:
           arguments: clean bootJar
 
-      # template로부터 application.yml 작성
+      # application.yml 치환
       - name: Create application.yml from template
         run: |
           cp src/main/resources/application.yml.template src/main/resources/application.yml
@@ -79,32 +77,36 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      # Docker Hub 이미지 푸시
+      # Docker Hub 푸시
       - name: docker Hub push
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing
 
-  run-docker-image-on-ec2:
+  run-docker-compose-on-ec2:
     needs: build-docker-image
     runs-on: self-hosted
 
     steps:
-      - name: ensure network exists
-        run: sudo docker network inspect app-net >/dev/null 2>&1 || sudo docker network create app-net
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-      - name: docker pull
+      - name: Docker login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Pull latest image
         run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing:latest
 
-      - name: stop & remove previous
-        run: |
-          sudo docker stop spring 2>/dev/null || true
-          sudo docker rm spring 2>/dev/null || true
+      - name: Stop previous containers
+        run: sudo docker-compose down || true
 
-      - name: run spring on same network as redis
+      - name: Run with docker-compose
         run: |
-          sudo docker run -d --name spring \
-            --network app-net \
-            --restart unless-stopped \
-            -p ${{ secrets.SERVER_PORT }}:${{ secrets.SERVER_PORT }} \
-            -e SERVER_PORT=${{ secrets.SERVER_PORT }} \
-            -e SPRING_PROFILES_ACTIVE=${{ secrets.SPRING_PROFILES_ACTIVE }} \
-            ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing:latest
+          export SERVER_PORT=${{ secrets.SERVER_PORT }}
+          export SPRING_PROFILES_ACTIVE=${{ secrets.SPRING_PROFILES_ACTIVE }}
+          export DB_NAME=${{ secrets.DB_NAME }}
+          export DB_USERNAME=${{ secrets.DB_USERNAME }}
+          export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          export REDIS_PORT=${{ secrets.REDIS_PORT }}
+          sudo -E docker-compose up -d
