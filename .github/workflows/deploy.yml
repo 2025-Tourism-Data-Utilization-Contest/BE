@@ -118,7 +118,7 @@ jobs:
         run: |
           sudo docker run --name spring \
             --network app-net \
-            --rm -d \
+            --restart unless-stopped \
             -p ${{ secrets.SERVER_PORT }}:${{ secrets.SERVER_PORT }} \
             -e SERVER_PORT=${{ secrets.SERVER_PORT }} \
             ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing
