@@ -26,4 +26,12 @@ public class RoutePlaceCreateRequest {
     @NotNull
     @Schema(description = "해당 일자 내 장소 방문 순서(M번쨰)입니다. M은 1~30의 값입니다.", example = "1")
     private int orderInDay;
+
+    @NotNull
+    @Schema(description = "TourAPI 조회용 pk값 1", example = "1")
+    private String contentId;
+
+    @NotNull
+    @Schema(description = "TourAPI 조회용 pk값 2", example = "1")
+    private String contentTypeId;
 }
