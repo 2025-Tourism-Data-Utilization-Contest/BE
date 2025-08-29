@@ -12,52 +12,80 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    // 1. 커서가 없을 때 (최초 요청) - 최신순
+    // 최신순 - 최초 페이지
     @Query("""
-            SELECT p FROM Post p
-            WHERE (:postType IS NULL OR p.postType = :postType)
-            ORDER BY p.createdAt DESC
+        SELECT DISTINCT p
+        FROM Post p
+        LEFT JOIN MemberTeam mt ON p.member.id = mt.member.id
+        WHERE (:postType IS NULL OR p.postType = :postType)
+          AND (
+              p.visibility = 'VISIBLE_ALL'
+              OR (p.visibility = 'TEAM_ONLY' AND mt.team.id IN :teamIds)
+          )
+        ORDER BY p.createdAt DESC
         """)
-    List<Post> findByPostTypeOrderByCreatedAtDesc(
-        @Param("postType") PostType postType
-    );
-
-    // 2. 커서가 있을 때 (이후 페이지 요청) - 최신순
-    @Query("""
-            SELECT p FROM Post p
-            WHERE (:postType IS NULL OR p.postType = :postType)
-              AND p.createdAt < :cursor
-            ORDER BY p.createdAt DESC
-        """)
-    List<Post> findByPostTypeAndCreatedAtBeforeOrderByCreatedAtDesc(
+    List<Post> findVisiblePostsOrderByCreatedAtDesc(
         @Param("postType") PostType postType,
-        @Param("cursor") LocalDateTime cursor
+        @Param("teamIds") List<Long> teamIds
     );
 
-    // 1. 커서가 없을 때 (인기순 기본 정렬) - 인기순
+    // 최신순 - 커서 페이징
     @Query("""
-            SELECT p FROM Post p
-            WHERE (:postType IS NULL OR p.postType = :postType)
-            ORDER BY p.likeCount DESC, p.createdAt DESC
+        SELECT DISTINCT p
+        FROM Post p
+        LEFT JOIN MemberTeam mt ON p.member.id = mt.member.id
+        WHERE (:postType IS NULL OR p.postType = :postType)
+          AND p.createdAt < :cursor
+          AND (
+              p.visibility = 'VISIBLE_ALL'
+              OR (p.visibility = 'TEAM_ONLY' AND mt.team.id IN :teamIds)
+          )
+        ORDER BY p.createdAt DESC
         """)
-    List<Post> findByPostTypeOrderByLikeCountDesc(
-        @Param("postType") PostType postType
+    List<Post> findVisiblePostsByCreatedAtBefore(
+        @Param("postType") PostType postType,
+        @Param("cursor") LocalDateTime cursor,
+        @Param("teamIds") List<Long> teamIds
     );
 
-    // 2. 커서가 있을 때 (likeCount, createdAt 기준 페이징) - 인기순
+    // 인기순 - 최초 페이지
     @Query("""
-            SELECT p FROM Post p
-            WHERE (:postType IS NULL OR p.postType = :postType)
-              AND (
-                p.likeCount < :likeCount
-                OR (p.likeCount = :likeCount AND p.createdAt < :createdAt)
-              )
-            ORDER BY p.likeCount DESC, p.createdAt DESC
+        SELECT DISTINCT p
+        FROM Post p
+        LEFT JOIN MemberTeam mt ON p.member.id = mt.member.id
+        WHERE (:postType IS NULL OR p.postType = :postType)
+          AND (
+              p.visibility = 'VISIBLE_ALL'
+              OR (p.visibility = 'TEAM_ONLY' AND mt.team.id IN :teamIds)
+          )
+        ORDER BY p.likeCount DESC, p.createdAt DESC
         """)
-    List<Post> findByPopularCursor(
+    List<Post> findVisiblePostsOrderByLikeCountDesc(
+        @Param("postType") PostType postType,
+        @Param("teamIds") List<Long> teamIds
+    );
+
+    // 인기순 - 커서 페이징
+    @Query("""
+        SELECT DISTINCT p
+        FROM Post p
+        LEFT JOIN MemberTeam mt ON p.member.id = mt.member.id
+        WHERE (:postType IS NULL OR p.postType = :postType)
+          AND (
+              p.likeCount < :likeCount
+              OR (p.likeCount = :likeCount AND p.createdAt < :createdAt)
+          )
+          AND (
+              p.visibility = 'VISIBLE_ALL'
+              OR (p.visibility = 'TEAM_ONLY' AND mt.team.id IN :teamIds)
+          )
+        ORDER BY p.likeCount DESC, p.createdAt DESC
+        """)
+    List<Post> findVisiblePostsByPopularCursor(
         @Param("postType") PostType postType,
         @Param("likeCount") int likeCount,
-        @Param("createdAt") LocalDateTime createdAt
+        @Param("createdAt") LocalDateTime createdAt,
+        @Param("teamIds") List<Long> teamIds
     );
 
     int countByMemberId(Long memberId);
