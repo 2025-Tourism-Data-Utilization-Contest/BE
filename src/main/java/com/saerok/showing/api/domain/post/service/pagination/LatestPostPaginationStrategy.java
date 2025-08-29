@@ -40,25 +40,27 @@ public class LatestPostPaginationStrategy implements PostPaginationStrategy {
     }
 
     @Override
-    public List<Post> paginate(PostType postType, Object cursor, int limit) {
+    public List<Post> paginate(PostType postType, Object cursor, int limit, List<Long> teamIds) {
         LocalDateTime cursorTime = (cursor instanceof CreatedAtCursor c) ? c.createdAt() : null;
         return (
             cursorTime == null
-                ? postRepository.findByPostTypeOrderByCreatedAtDesc(postType)
-                : postRepository.findByPostTypeAndCreatedAtBeforeOrderByCreatedAtDesc(postType, cursorTime)
+                ? postRepository.findVisiblePostsOrderByCreatedAtDesc(postType, teamIds)
+                : postRepository.findVisiblePostsByCreatedAtBefore(postType, cursorTime, teamIds)
         ).stream()
             .limit(limit + 1)
             .toList();
     }
 
+    @Override
     public CursorResult<PostSummaryResponse> getCursorResult(
         PostType postType,
         String cursorRaw,
         int limit,
+        List<Long> teamIds,
         CommentCountProvider commentCountProvider
     ) {
         CreatedAtCursor cursor = (CreatedAtCursor) parseCursor(cursorRaw);
-        List<Post> posts = paginate(postType, cursor, limit);
+        List<Post> posts = paginate(postType, cursor, limit, teamIds);
         List<PostSummaryResponse> responses = posts.stream()
             .map(post -> PostSummaryResponse.toDto(post, commentCountProvider.getCount(post.getId())))
             .toList();
