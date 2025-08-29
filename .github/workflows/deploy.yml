@@ -109,4 +109,4 @@ jobs:
           export DB_USERNAME=${{ secrets.DB_USERNAME }}
           export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
           export REDIS_PORT=${{ secrets.REDIS_PORT }}
-          sudo -E docker-compose up -d
+          sudo -E docker compose up -d
