@@ -1,5 +1,6 @@
-name: Java CI/CD with Gradle
+name: Java CI/CD with GradleMore actions
 
+# develop 브랜치에 push가 발생할 경우 동작
 on:
   push:
     branches: [ "develop" ]
@@ -9,22 +10,26 @@ permissions:
   contents: read
 
 jobs:
+  # Spring Boot 애플리케이션을 빌드하여 도커허브에 푸시하는 과정
   build-docker-image:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
+      # Java 21 세팅
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'temurin'
 
+      # Spring Boot 애플리케이션 빌드
       - name: Build with Gradle
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
         with:
           arguments: clean bootJar
 
+      # template로부터 application.yml 작성
       - name: Create application.yml from template
         run: |
           cp src/main/resources/application.yml.template src/main/resources/application.yml
@@ -63,64 +68,52 @@ jobs:
           SPRINGDOC_SWAGGER_UI_PATH: ${{ secrets.SPRINGDOC_SWAGGER_UI_PATH }}
           SPRINGDOC_PACKAGES_TO_SCAN: ${{ secrets.SPRINGDOC_PACKAGES_TO_SCAN }}
 
+      # Docker 이미지 빌드
       - name: docker image build
         run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing .
 
+      # DockerHub 로그인
       - name: docker login
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
+
+
+
+
+
+
+
+      # Docker Hub 이미지 푸시
       - name: docker Hub push
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing
 
-  run-docker-compose-on-ec2:
+  run-docker-image-on-ec2:
+
     needs: build-docker-image
     runs-on: self-hosted
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      - name: ensure network exists
+        run: sudo docker network inspect app-net >/dev/null 2>&1 || sudo docker network create app-net
 
-      - name: Docker login
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
-      - name: Pull latest image
+      - name: docker pull
         run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing:latest
 
-      - name: Stop previous containers
-        run: sudo docker compose down || true
-
-      - name: Run with docker-compose (with secrets env)
+      - name: stop & remove previous
         run: |
-          export SERVER_PORT=${{ secrets.SERVER_PORT }}
-          export SPRING_PROFILES_ACTIVE=${{ secrets.SPRING_PROFILES_ACTIVE }}
-          export DB_NAME=${{ secrets.DB_NAME }}
-          export DB_USERNAME=${{ secrets.DB_USERNAME }}
-          export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-          export REDIS_PORT=${{ secrets.REDIS_PORT }}
-          export REDIS_HOST=${{ secrets.REDIS_HOST }}
-          export REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
-          export JWT_SECRET=${{ secrets.JWT_SECRET }}
-          export JWT_ACCESS_TOKEN_EXPIRATION=${{ secrets.JWT_ACCESS_TOKEN_EXPIRATION }}
-          export JWT_REFRESH_TOKEN_EXPIRATION=${{ secrets.JWT_REFRESH_TOKEN_EXPIRATION }}
-          export JWT_COOKIE_DOMAIN=${{ secrets.JWT_COOKIE_DOMAIN }}
-          export BUCKET_NAME=${{ secrets.BUCKET_NAME }}
-          export S3_BASE_URL=${{ secrets.S3_BASE_URL }}
-          export S3_ACCESS_KEY=${{ secrets.S3_ACCESS_KEY }}
-          export S3_SECRET_KEY=${{ secrets.S3_SECRET_KEY }}
-          export CORS_ALLOWED_ORIGINS=${{ secrets.CORS_ALLOWED_ORIGINS }}
-          export CORS_ALLOWED_METHODS=${{ secrets.CORS_ALLOWED_METHODS }}
-          export CORS_ALLOWED_HEADERS=${{ secrets.CORS_ALLOWED_HEADERS }}
-          export CORS_ALLOW_CREDENTIALS=${{ secrets.CORS_ALLOW_CREDENTIALS }}
-          export CORS_MAX_AGE=${{ secrets.CORS_MAX_AGE }}
-          export FRONTEND_HOME_URL=${{ secrets.FRONTEND_HOME_URL }}
-          export FRONTEND_OAUTH_REDIRECT_URL=${{ secrets.FRONTEND_OAUTH_REDIRECT_URL }}
-          export SPRINGDOC_API_DOCS_PATH=${{ secrets.SPRINGDOC_API_DOCS_PATH }}
-          export SPRINGDOC_SWAGGER_UI_PATH=${{ secrets.SPRINGDOC_SWAGGER_UI_PATH }}
-          export SPRINGDOC_PACKAGES_TO_SCAN=${{ secrets.SPRINGDOC_PACKAGES_TO_SCAN }}
-          sudo -E docker compose up -d app
+          sudo docker stop spring 2>/dev/null || true
+          sudo docker rm spring 2>/dev/null || true
+
+      - name: run spring on same network as redis
+
+        run: |
+          sudo docker run -d --name spring \
+            --network app-net \
+            --restart unless-stopped \
+            -p ${{ secrets.SERVER_PORT }}:${{ secrets.SERVER_PORT }} \
+            -e SERVER_PORT=${{ secrets.SERVER_PORT }} \
+            -e SPRING_PROFILES_ACTIVE=${{ secrets.SPRING_PROFILES_ACTIVE }} \
+            ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing:latest
