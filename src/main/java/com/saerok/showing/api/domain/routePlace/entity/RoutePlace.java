@@ -49,12 +49,20 @@ public class RoutePlace extends BaseEntity {
     @Column(name = "order_in_day", nullable = false)
     private int orderInDay;
 
+    @Column(name = "content_id", nullable = false)
+    private String contentId;
+
+    @Column(name = "content_type_id", nullable = false)
+    private String contentTypeId;
+
     public static RoutePlace toEntity(RoutePlaceCreateRequest request, Route route, String PlaceName) {
         return RoutePlace.builder()
             .route(route)
             .placeName(PlaceName)
             .dayNumber(request.getDayNumber())
             .orderInDay(request.getOrderInDay())
+            .contentId(request.getContentId())
+            .contentTypeId(request.getContentTypeId())
             .build();
     }
 
