@@ -1,6 +1,6 @@
 package com.saerok.showing.api.domain.theme.dto.response;
 
-import com.saerok.showing.api.domain.bird.dto.response.BirdSummaryResponse;
+import com.saerok.showing.api.domain.birdTheme.dto.response.BirdThemeResponse;
 import com.saerok.showing.api.domain.place.dto.response.AttractionPlaceSummaryResponse;
 import com.saerok.showing.api.domain.place.dto.response.ExperiencePlaceSummaryResponse;
 import com.saerok.showing.api.domain.review.dto.response.ReviewSummaryResponse;
@@ -27,7 +27,7 @@ public class ThemeDetailResponse {
 
     private List<DescriptionBlockResponse> descriptionBlocks;
 
-    private List<BirdSummaryResponse> birds;
+    private List<BirdThemeResponse> birds;
 
     private List<AttractionPlaceSummaryResponse> attractionPlaces;
 
@@ -39,7 +39,7 @@ public class ThemeDetailResponse {
 
     public static ThemeDetailResponse toDto(
         Theme theme,
-        List<BirdSummaryResponse> birds,
+        List<BirdThemeResponse> birds,
         List<AttractionPlaceSummaryResponse> attractionPlaces,
         List<ExperiencePlaceSummaryResponse> experiencePlaces,
         int reviewCount,
@@ -51,11 +51,7 @@ public class ThemeDetailResponse {
             .address(theme.getAddress())
             .locationIntro(theme.getLocationIntro())
             .highlightPoints(theme.getHighlightPoints())
-            .descriptionBlocks(
-                theme.getDescriptionBlocks().stream()
-                    .map(DescriptionBlockResponse::toDto)
-                    .toList()
-            )
+            .descriptionBlocks(DescriptionBlockResponse.fromList(theme.getDescriptionBlocks()))
             .themeImage(theme.getThemeImage())
             .birds(birds)
             .attractionPlaces(attractionPlaces)
