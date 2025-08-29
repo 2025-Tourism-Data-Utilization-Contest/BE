@@ -34,7 +34,6 @@ jobs:
         run: |
           cp src/main/resources/application.yml.template src/main/resources/application.yml
           envsubst < src/main/resources/application.yml.template > src/main/resources/application.yml
-          cat src/main/resources/application.yml
         env:
           SERVER_PORT: ${{ secrets.SERVER_PORT }}
           SPRING_PROFILES_ACTIVE: ${{ secrets.SPRING_PROFILES_ACTIVE }}
@@ -114,7 +113,7 @@ jobs:
           sudo docker stop spring 2>/dev/null || true
           sudo docker rm spring 2>/dev/null || true
 
-      # 최신 이미지를 컨테이너화하여 실행
+            # 최신 이미지를 컨테이너화하여 실행
       - name: docker run new container
         run: |
           sudo docker run --name spring \
@@ -122,6 +121,37 @@ jobs:
             --restart unless-stopped \
             -p ${{ secrets.SERVER_PORT }}:${{ secrets.SERVER_PORT }} \
             -e SERVER_PORT=${{ secrets.SERVER_PORT }} \
+            -e SPRING_PROFILES_ACTIVE=${{ secrets.SPRING_PROFILES_ACTIVE }} \
+            -e DB_URL=${{ secrets.DB_URL }} \
+            -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
+            -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+            -e REDIS_HOST=${{ secrets.REDIS_HOST }} \
+            -e REDIS_PORT=${{ secrets.REDIS_PORT }} \
+            -e REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }} \
+            -e NAVER_CLIENT_ID=${{ secrets.NAVER_CLIENT_ID }} \
+            -e NAVER_CLIENT_SECRET=${{ secrets.NAVER_CLIENT_SECRET }} \
+            -e NAVER_REDIRECT_URI=${{ secrets.NAVER_REDIRECT_URI }} \
+            -e KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }} \
+            -e KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }} \
+            -e KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }} \
+            -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
+            -e JWT_ACCESS_TOKEN_EXPIRATION=${{ secrets.JWT_ACCESS_TOKEN_EXPIRATION }} \
+            -e JWT_REFRESH_TOKEN_EXPIRATION=${{ secrets.JWT_REFRESH_TOKEN_EXPIRATION }} \
+            -e JWT_COOKIE_DOMAIN=${{ secrets.JWT_COOKIE_DOMAIN }} \
+            -e BUCKET_NAME=${{ secrets.BUCKET_NAME }} \
+            -e S3_BASE_URL=${{ secrets.S3_BASE_URL }} \
+            -e S3_ACCESS_KEY=${{ secrets.S3_ACCESS_KEY }} \
+            -e S3_SECRET_KEY=${{ secrets.S3_SECRET_KEY }} \
+            -e CORS_ALLOWED_ORIGINS=${{ secrets.CORS_ALLOWED_ORIGINS }} \
+            -e CORS_ALLOWED_METHODS=${{ secrets.CORS_ALLOWED_METHODS }} \
+            -e CORS_ALLOWED_HEADERS=${{ secrets.CORS_ALLOWED_HEADERS }} \
+            -e CORS_ALLOW_CREDENTIALS=${{ secrets.CORS_ALLOW_CREDENTIALS }} \
+            -e CORS_MAX_AGE=${{ secrets.CORS_MAX_AGE }} \
+            -e FRONTEND_HOME_URL=${{ secrets.FRONTEND_HOME_URL }} \
+            -e FRONTEND_OAUTH_REDIRECT_URL=${{ secrets.FRONTEND_OAUTH_REDIRECT_URL }} \
+            -e SPRINGDOC_API_DOCS_PATH=${{ secrets.SPRINGDOC_API_DOCS_PATH }} \
+            -e SPRINGDOC_SWAGGER_UI_PATH=${{ secrets.SPRINGDOC_SWAGGER_UI_PATH }} \
+            -e SPRINGDOC_PACKAGES_TO_SCAN=${{ secrets.SPRINGDOC_PACKAGES_TO_SCAN }} \
             ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing
 
       # 미사용 이미지 정리
