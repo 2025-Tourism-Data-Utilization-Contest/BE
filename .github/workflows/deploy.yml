@@ -84,83 +84,25 @@ jobs:
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing
 
   run-docker-image-on-ec2:
+    # build-docker-image 과정이 완료되어야 실행
     needs: build-docker-image
     runs-on: self-hosted
 
     steps:
-      - name: ensure network exists
-        run: sudo docker network inspect app-net >/dev/null 2>&1 || sudo docker network create app-net
-
-      # Redis 컨테이너 실행
-      - name: run redis
-        run: |
-          sudo docker stop redis 2>/dev/null || true
-          sudo docker rm redis 2>/dev/null || true
-          sudo docker run -d --name redis \
-            --network app-net \
-            --restart unless-stopped \
-            -p ${{ secrets.REDIS_PORT }}:${{ secrets.REDIS_PORT }} \
-            redis:7 \
-            redis-server --requirepass "${{ secrets.REDIS_PASSWORD }}"
-
       # 최신 이미지를 pull
       - name: docker pull
         run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing
 
       # 기존의 컨테이너 중지
-      - name: stop & remove previous spring
-        run: |
-          sudo docker stop spring 2>/dev/null || true
-          sudo docker rm spring 2>/dev/null || true
-
-      # .env 파일 생성
-      - name: create env file
-        run: |
-          cat <<EOF > .env
-          SERVER_PORT=${{ secrets.SERVER_PORT }}
-          SPRING_PROFILES_ACTIVE=${{ secrets.SPRING_PROFILES_ACTIVE }}
-          DB_URL=${{ secrets.DB_URL }}
-          DB_USERNAME=${{ secrets.DB_USERNAME }}
-          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-          REDIS_HOST=${{ secrets.REDIS_HOST }}
-          REDIS_PORT=${{ secrets.REDIS_PORT }}
-          REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
-          NAVER_CLIENT_ID=${{ secrets.NAVER_CLIENT_ID }}
-          NAVER_CLIENT_SECRET=${{ secrets.NAVER_CLIENT_SECRET }}
-          NAVER_REDIRECT_URI=${{ secrets.NAVER_REDIRECT_URI }}
-          KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}
-          KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }}
-          KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }}
-          JWT_SECRET=${{ secrets.JWT_SECRET }}
-          JWT_ACCESS_TOKEN_EXPIRATION=${{ secrets.JWT_ACCESS_TOKEN_EXPIRATION }}
-          JWT_REFRESH_TOKEN_EXPIRATION=${{ secrets.JWT_REFRESH_TOKEN_EXPIRATION }}
-          JWT_COOKIE_DOMAIN=${{ secrets.JWT_COOKIE_DOMAIN }}
-          BUCKET_NAME=${{ secrets.BUCKET_NAME }}
-          S3_BASE_URL=${{ secrets.S3_BASE_URL }}
-          S3_ACCESS_KEY=${{ secrets.S3_ACCESS_KEY }}
-          S3_SECRET_KEY=${{ secrets.S3_SECRET_KEY }}
-          CORS_ALLOWED_ORIGINS=${{ secrets.CORS_ALLOWED_ORIGINS }}
-          CORS_ALLOWED_METHODS=${{ secrets.CORS_ALLOWED_METHODS }}
-          CORS_ALLOWED_HEADERS=${{ secrets.CORS_ALLOWED_HEADERS }}
-          CORS_ALLOW_CREDENTIALS=${{ secrets.CORS_ALLOW_CREDENTIALS }}
-          CORS_MAX_AGE=${{ secrets.CORS_MAX_AGE }}
-          FRONTEND_HOME_URL=${{ secrets.FRONTEND_HOME_URL }}
-          FRONTEND_OAUTH_REDIRECT_URL=${{ secrets.FRONTEND_OAUTH_REDIRECT_URL }}
-          SPRINGDOC_API_DOCS_PATH=${{ secrets.SPRINGDOC_API_DOCS_PATH }}
-          SPRINGDOC_SWAGGER_UI_PATH=${{ secrets.SPRINGDOC_SWAGGER_UI_PATH }}
-          SPRINGDOC_PACKAGES_TO_SCAN=${{ secrets.SPRINGDOC_PACKAGES_TO_SCAN }}
-          EOF
+      - name: docker stop container
+        run: sudo docker stop spring 2>/dev/null || true
 
       # 최신 이미지를 컨테이너화하여 실행
       - name: docker run new container
         run: |
           sudo docker run --name spring \
-            --network app-net \
-            --restart unless-stopped \
-            --env-file .env \
+            --network app_showing-network \
+            --rm -d \
             -p ${{ secrets.SERVER_PORT }}:${{ secrets.SERVER_PORT }} \
+            -e SERVER_PORT=${{ secrets.SERVER_PORT }} \
             ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-showing
-
-      # 미사용 이미지 정리
-      - name: delete old docker image
-        run: sudo docker system prune -f
