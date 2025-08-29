@@ -24,8 +24,8 @@ public class CommentResponse {
         return CommentResponse.builder()
             .id(comment.getId())
             .postId(comment.getPost().getId())
-            .writer(comment.getPost().getMember().getName())
-            .writerProfileImage(comment.getPost().getMember().getProfileImage())
+            .writer(comment.getMember().getName())
+            .writerProfileImage(comment.getMember().getProfileImage())
             .comment(comment.getComment())
             .likeCount(comment.getLikeCount())
             .build();
