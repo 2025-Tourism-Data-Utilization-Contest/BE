@@ -12,15 +12,15 @@ public class TeamMemberResponse {
 
     private Long memberId;
 
-    private String name;
+    private String memberName;
 
     private String profileImage;
 
-    public static TeamMemberResponse toDto(Member member) {
+    public static TeamMemberResponse toDto(Member member, Long teamId) {
         return TeamMemberResponse.builder()
-            .teamId(member.getTeam().getId())
+            .teamId(teamId)
             .memberId(member.getId())
-            .name(member.getName())
+            .memberName(member.getName())
             .profileImage(member.getProfileImage())
             .build();
     }
