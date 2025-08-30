@@ -92,7 +92,7 @@ public class TeamService {
         return teamId;
     }
 
-    private Team findById(Long teamId) {
+    public Team findById(Long teamId) {
         return teamRepository.findById(teamId)
             .orElseThrow(() -> ShowingException.from(ErrorCode.TEAM_NOT_FOUND));
     }
