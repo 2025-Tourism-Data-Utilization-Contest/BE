@@ -74,9 +74,9 @@ public class TeamService {
     @Transactional(readOnly = true)
     public List<MyTeamResponse> getMyTeams() {
         Member currentMember = loginMemberProvider.getCurrentLoginMember();
-        List<Team> teams = teamRepository.findAllByMemberId(currentMember.getId());
-        return teams.stream()
-            .map(t -> MyTeamResponse.toDto(t, currentMember))
+        return memberTeamService.getTeamsByMemberId(currentMember.getId()).stream()
+            .map(MemberTeam::getTeam) // MemberTeam → Team
+            .map(team -> MyTeamResponse.toDto(team, currentMember))
             .toList();
     }
 
