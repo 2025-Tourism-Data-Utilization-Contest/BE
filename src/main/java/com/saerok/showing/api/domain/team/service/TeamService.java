@@ -1,11 +1,11 @@
 package com.saerok.showing.api.domain.team.service;
 
 import com.saerok.showing.api.domain.member.entity.Member;
-import com.saerok.showing.api.domain.member.repository.MemberRepository;
 import com.saerok.showing.api.domain.memberTeam.entity.MemberTeam;
 import com.saerok.showing.api.domain.memberTeam.service.MemberTeamService;
 import com.saerok.showing.api.domain.team.dto.request.TeamCreateRequest;
 import com.saerok.showing.api.domain.team.dto.request.TeamJoinRequest;
+import com.saerok.showing.api.domain.team.dto.response.MyTeamResponse;
 import com.saerok.showing.api.domain.team.dto.response.TeamMemberResponse;
 import com.saerok.showing.api.domain.team.entity.Team;
 import com.saerok.showing.api.domain.team.repository.TeamRepository;
@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class TeamService {
 
     private final TeamRepository teamRepository;
-    private final MemberRepository memberRepository;
     private final MemberTeamService memberTeamService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final LoginMemberProvider loginMemberProvider;
@@ -69,6 +68,15 @@ public class TeamService {
             .map(MemberTeam::getMember)
             .sorted(Comparator.comparing(Member::getCreatedAt))
             .map(member -> TeamMemberResponse.toDto(member, teamId))
+            .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<MyTeamResponse> getMyTeams() {
+        Member currentMember = loginMemberProvider.getCurrentLoginMember();
+        List<Team> teams = teamRepository.findAllByMemberId(currentMember.getId());
+        return teams.stream()
+            .map(t -> MyTeamResponse.toDto(t, currentMember))
             .toList();
     }
 
