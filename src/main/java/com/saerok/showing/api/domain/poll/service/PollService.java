@@ -1,6 +1,7 @@
 package com.saerok.showing.api.domain.poll.service;
 
 import com.saerok.showing.api.domain.member.entity.Member;
+import com.saerok.showing.api.domain.memberTeam.service.MemberTeamService;
 import com.saerok.showing.api.domain.place.dto.response.PlaceSummaryResponse;
 import com.saerok.showing.api.domain.poll.dto.request.PollCandidateRegisterRequest;
 import com.saerok.showing.api.domain.poll.dto.request.PollCreateRequest;
@@ -11,6 +12,8 @@ import com.saerok.showing.api.domain.poll.repository.PollRepository;
 import com.saerok.showing.api.domain.route.dto.response.RouteSummaryResponse;
 import com.saerok.showing.api.domain.route.entity.Route;
 import com.saerok.showing.api.domain.route.service.RouteService;
+import com.saerok.showing.api.domain.team.entity.Team;
+import com.saerok.showing.api.domain.team.service.TeamService;
 import com.saerok.showing.api.global.auth.util.LoginMemberProvider;
 import com.saerok.showing.api.global.exception.ErrorCode;
 import com.saerok.showing.api.global.exception.ShowingException;
@@ -24,13 +27,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class PollService {
 
     private final PollRepository pollRepository;
-    private final LoginMemberProvider loginMemberProvider;
+    private final TeamService teamService;
     private final RouteService routeService;
+    private final MemberTeamService memberTeamService;
+    private final LoginMemberProvider loginMemberProvider;
 
     @Transactional
     public Long save(PollCreateRequest request) {
         Member member = loginMemberProvider.getCurrentLoginMember();
-        Poll poll = Poll.toEntity(request, member);
+        Team team = teamService.findById(request.getTeamId());
+        Poll poll = Poll.toEntity(request, member, team);
+        validateTeamMember(poll, member);
         pollRepository.save(poll);
         return poll.getId();
     }
@@ -54,6 +61,7 @@ public class PollService {
     public void registerCandidate(Long pollId, PollCandidateRegisterRequest request) {
         Member member = loginMemberProvider.getCurrentLoginMember();
         Poll poll = findById(pollId);
+        validateTeamMember(poll, member);
         Route route = routeService.findById(request.getRouteId());
         poll.registerRouteOption(route);
     }
@@ -62,6 +70,7 @@ public class PollService {
     public Long update(Long pollId, PollUpdateRequest request) {
         Member member = loginMemberProvider.getCurrentLoginMember();
         Poll poll = findById(pollId);
+        validateTeamMember(poll, member);
         poll.validateOwner(poll, member);
         poll.update(request);
         return poll.getId();
@@ -71,9 +80,16 @@ public class PollService {
     public Long delete(Long pollId) {
         Member member = loginMemberProvider.getCurrentLoginMember();
         Poll poll = findById(pollId);
+        validateTeamMember(poll, member);
         poll.validateOwner(poll, member);
         pollRepository.delete(poll);
         return pollId;
+    }
+
+    private void validateTeamMember(Poll poll, Member member) {
+        if (!memberTeamService.existsByMemberIdAndTeamId(member.getId(), poll.getTeam().getId())) {
+            throw ShowingException.from(ErrorCode.NOT_MEMBER_OF_TEAM);
+        }
     }
 
     private int getCommentCount(Long pollId) {
