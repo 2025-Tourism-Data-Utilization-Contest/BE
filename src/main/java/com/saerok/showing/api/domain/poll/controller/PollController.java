@@ -31,7 +31,8 @@ public class PollController {
     @Operation(
         summary = "투표 등록",
         description = """
-            [모든 Role 가능] 투표를 등록합니다.
+            [모든 Role 가능] 새 투표를 등록합니다.<br>
+            투표 등록 시, 반드시 teamId를 입력해야하며, 해당 투표 조회와 후보지 등록은 팀원만 가능합니다.
             """
     )
     @PreAuthorize("hasRole('MEMBER')")
@@ -60,8 +61,8 @@ public class PollController {
         summary = "투표 후보 등록",
         description = """
             [모든 Role 가능] 투표에 여행 경로(Route)를 하나 등록합니다.<br>
-            자신이 생성한 여행 경로 중 하나를 투표 후보로 올릴 수 있으며,<br>
-            동일한 경로는 중복 등록할 수 없습니다.
+            현재 로그인한 사용자가 해당 팀의 멤버인 경우만 등록할 수 있습니다. <br>
+            자신이 생성한 여행 경로 중 하나를 투표 후보로 올릴 수 있으며, 동일한 경로는 중복 등록할 수 없습니다.
             """
     )
     @PreAuthorize("hasRole('MEMBER')")
@@ -76,7 +77,11 @@ public class PollController {
 
     @Operation(
         summary = "투표 수정",
-        description = "[모든 Role 가능] 투표 ID를 기준으로 내용 및 투표 상태를 수정합니다."
+        description = """
+            [모든 Role 가능] 투표 ID를 기준으로 내용 및 투표 상태를 수정합니다.<br>
+            수정 권한은 해당 투표 생성자에게만 부여됩니다.<br>
+            팀 미소속자 또는 작성자가 아닐 경우 오류를 반환합니다.
+            """
     )
     @PreAuthorize("hasRole('MEMBER')")
     @PatchMapping("/{pollId}")
@@ -90,7 +95,10 @@ public class PollController {
 
     @Operation(
         summary = "투표 삭제",
-        description = "[모든 Role 가능] 투표 ID를 기준으로 투표를 삭제합니다."
+        description = """
+            [모든 Role 가능] 투표 ID를 기준으로 투표를 삭제합니다.<br>
+            삭제 권한은 해당 투표 생성자에게만 부여됩니다.
+            """
     )
     @PreAuthorize("hasRole('MEMBER')")
     @DeleteMapping("/{pollId}")
@@ -100,5 +108,4 @@ public class PollController {
         Long id = pollService.delete(pollId);
         return ApiResponse.success(id);
     }
-
 }

@@ -4,10 +4,10 @@ import com.saerok.showing.api.domain.member.entity.Member;
 import com.saerok.showing.api.domain.poll.dto.request.PollCreateRequest;
 import com.saerok.showing.api.domain.poll.dto.request.PollUpdateRequest;
 import com.saerok.showing.api.domain.route.entity.Route;
+import com.saerok.showing.api.domain.team.entity.Team;
 import com.saerok.showing.api.global.entity.BaseEntity;
 import com.saerok.showing.api.global.exception.ErrorCode;
 import com.saerok.showing.api.global.exception.ShowingException;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -64,7 +64,11 @@ public class Poll extends BaseEntity {
     @OneToMany(mappedBy = "poll")
     private List<Route> routeOptions = new ArrayList<>();
 
-    public static Poll toEntity(PollCreateRequest request, Member member) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id", nullable = false)
+    private Team team;
+
+    public static Poll toEntity(PollCreateRequest request, Member member, Team team) {
         return Poll.builder()
             .title(request.getTitle())
             .pollStatus(request.getPollStatus())
@@ -72,6 +76,7 @@ public class Poll extends BaseEntity {
             .endDate(request.getEndDate())
             .likeCount(0)
             .member(member)
+            .team(team)
             .build();
     }
 

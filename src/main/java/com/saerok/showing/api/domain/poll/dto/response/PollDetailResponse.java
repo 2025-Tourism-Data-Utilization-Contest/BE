@@ -31,6 +31,8 @@ public class PollDetailResponse {
 
     private List<RouteSummaryResponse> routes;
 
+    private Long teamId;
+
     public static PollDetailResponse toDto(
         Poll poll,
         Member member,
@@ -47,6 +49,7 @@ public class PollDetailResponse {
             .endDate(poll.getEndDate())
             .commentCount(commentCount)
             .routes(routes)
+            .teamId(poll.getTeam().getId())
             .build();
     }
 }
