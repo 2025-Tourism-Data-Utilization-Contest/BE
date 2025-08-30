@@ -25,7 +25,7 @@ public class LikeController {
         summary = "좋아요 토글 (게시글/댓글)",
         description = """
             [모든 Role 가능] 좋아요 토글입니다.<br>
-            좋아요 대상은 POST(게시글), COMMENT(댓글), ROUTE(여행 경로) 3가지입니다.<br>
+            좋아요 대상은 POST(게시글), COMMENT(댓글), ROUTE(여행 경로), POLL(투표 그 자체), POLL_ROUTE(투표 내 여행경로) 5가지입니다.<br>
             좋아요 된 대상을 다시 토글하게 되면 좋아요가 취소됩니다.<br>
             true 반환인 경우 좋아요 등록, false 반환은 좋아요 취소입니다.
             """

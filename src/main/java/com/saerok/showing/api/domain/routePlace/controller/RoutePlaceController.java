@@ -32,7 +32,8 @@ public class RoutePlaceController {
         summary = "여행코스 내 장소 추가",
         description = """
             [모든 Role 가능] 여행코스에 장소를 추가합니다.<br>
-            장소는 방문 일자(dayNumber)와 해당 일자 내 방문 순서(orderInDay)를 함께 지정해야 합니다.
+            장소는 방문 일자(dayNumber)와 해당 일자 내 방문 순서(orderInDay)를 함께 지정해야 합니다.<br>
+            장소 추가는 TourAPI에서 제공하는 contentId, contentTypeId를 이용합니다.
             """
     )
     @PreAuthorize("hasRole('MEMBER')")

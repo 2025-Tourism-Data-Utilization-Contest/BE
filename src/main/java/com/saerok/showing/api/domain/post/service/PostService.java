@@ -1,6 +1,7 @@
 package com.saerok.showing.api.domain.post.service;
 
 import com.saerok.showing.api.domain.comment.service.CommentCountProvider;
+import com.saerok.showing.api.domain.like.service.LikeReadService;
 import com.saerok.showing.api.domain.member.entity.Member;
 import com.saerok.showing.api.domain.memberTeam.service.MemberTeamService;
 import com.saerok.showing.api.domain.post.dto.request.PostCreateRequest;
@@ -32,6 +33,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final FileService fileService;
+    private final LikeReadService likeReadService;
     private final MemberTeamService memberTeamService;
     private final LoginMemberProvider loginMemberProvider;
     private final CommentCountProvider commentCountProvider;
@@ -53,7 +55,8 @@ public class PostService {
         Post post = findById(postId);
         validatePostVisibility(post, teamIds);
         int commentCount = commentCountProvider.getCount(postId);
-        return PostDetailResponse.toDto(post, commentCount);
+        boolean isLiked = likeReadService.isPostLiked(currentMember, postId);
+        return PostDetailResponse.toDto(post, commentCount, isLiked);
     }
 
     @Transactional(readOnly = true)
@@ -66,7 +69,8 @@ public class PostService {
         Member currentMember = loginMemberProvider.getCurrentLoginMember();
         List<Long> teamIds = memberTeamService.getTeamIdsByMemberId(currentMember.getId());
         PostPaginationStrategy strategy = postPaginationStrategyFactory.getStrategy(sortType);
-        return strategy.getCursorResult(postType, cursorRaw, limit, teamIds, commentCountProvider);
+        return strategy.getCursorResult(postType, cursorRaw, limit, teamIds, commentCountProvider, likeReadService,
+            currentMember);
     }
 
     @Transactional

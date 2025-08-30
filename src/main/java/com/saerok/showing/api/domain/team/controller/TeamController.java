@@ -34,7 +34,7 @@ public class TeamController {
             팀을 생성한 사람은 팀리더가 됩니다.<br>
             이미 팀이 존재하는 회원은 팀 생성을 할 수 없습니다.<br>
             팀명은 2~30글자 이며 중복이 불가능합니다.<br>
-            팀 인증코드는 영문자와 숫자를 조합한 4~30글자입니다.
+            팀 인증코드는 영문 대문자와 숫자를 조합한 6글자입니다.
             """
     )
     @PreAuthorize("hasRole('MEMBER')")
@@ -51,7 +51,7 @@ public class TeamController {
         description = """
             [모든 Role 가능] 팀에 가입합니다.<br>
             이미 팀이 존재하거나 요청한 팀에 가입된 경우는 가입되지 않습니다.
-            입장할 팁의 아이디와 비밀번호가 필요합니다.
+            입장할 팀의 이름과 비밀번호 6글자가 필요합니다.<br>
             """
     )
     @PreAuthorize("hasRole('MEMBER')")

@@ -2,6 +2,7 @@ package com.saerok.showing.api.domain.post.dto.response;
 
 import com.saerok.showing.api.domain.post.entity.Post;
 import com.saerok.showing.api.domain.post.entity.PostType;
+import com.saerok.showing.api.domain.post.entity.PostVisibility;
 import com.saerok.showing.api.global.file.dto.ExternalFileResponse;
 import com.saerok.showing.api.global.file.entity.UploadedFile;
 import com.saerok.showing.api.global.pagination.provider.CreatedAtProvider;
@@ -27,11 +28,15 @@ public class PostSummaryResponse implements CreatedAtProvider, PopularProvider {
 
     private ExternalFileResponse postImage;
 
+    private PostVisibility visibility;
+
     private PostType postType;
 
     private int likeCount;
 
     private int commentCount;
+
+    private boolean isLiked;
 
     private LocalDateTime createdAt;
 
@@ -45,7 +50,7 @@ public class PostSummaryResponse implements CreatedAtProvider, PopularProvider {
         return createdAt;
     }
 
-    public static PostSummaryResponse toDto(Post post, int commentCount) {
+    public static PostSummaryResponse toDto(Post post, int commentCount, boolean isLiked) {
         Optional<UploadedFile> firstFile = post.getPostImages().stream().findFirst();
         ExternalFileResponse imageDto = firstFile
             .map(ExternalFileResponse::toDto)
@@ -58,9 +63,11 @@ public class PostSummaryResponse implements CreatedAtProvider, PopularProvider {
             .writerProfileImage(post.getMember().getProfileImage())
             .content(post.getContent())
             .postImage(imageDto)
+            .visibility(post.getVisibility())
             .postType(post.getPostType())
             .likeCount(post.getLikeCount())
             .commentCount(commentCount)
+            .isLiked(isLiked)
             .createdAt(post.getCreatedAt())
             .build();
     }

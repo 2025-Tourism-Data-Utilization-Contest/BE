@@ -20,7 +20,9 @@ public class CommentResponse {
 
     private int likeCount;
 
-    public static CommentResponse toDto(Comment comment) {
+    private boolean isLiked;
+
+    public static CommentResponse toDto(Comment comment, boolean isLiked) {
         return CommentResponse.builder()
             .id(comment.getId())
             .postId(comment.getPost().getId())
@@ -28,6 +30,7 @@ public class CommentResponse {
             .writerProfileImage(comment.getMember().getProfileImage())
             .comment(comment.getComment())
             .likeCount(comment.getLikeCount())
+            .isLiked(isLiked)
             .build();
     }
 }

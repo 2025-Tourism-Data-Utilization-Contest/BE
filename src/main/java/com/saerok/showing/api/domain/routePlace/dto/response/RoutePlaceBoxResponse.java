@@ -19,7 +19,7 @@ public class RoutePlaceBoxResponse {
 
     private String contentTypeId;
 
-//    private String imageUrl;
+    private String imageUrl;
 
     public static RoutePlaceBoxResponse toDto(RoutePlace routePlace) {
         return RoutePlaceBoxResponse.builder()
@@ -28,7 +28,7 @@ public class RoutePlaceBoxResponse {
             .orderInDay(routePlace.getOrderInDay())
             .contentId(routePlace.getContentId())
             .contentTypeId(routePlace.getContentTypeId())
-//            .imageUrl(routePlace.getPlace().getPlaceImage())
+            .imageUrl(routePlace.getImageUrl())
             .build();
     }
 }
