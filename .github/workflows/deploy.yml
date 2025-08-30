@@ -102,7 +102,7 @@ jobs:
       # 최신 이미지를 컨테이너화하여 실행
       - name: docker run new container
         run: |
-          sudo docker run --name spring \
+          sudo docker run -d --name spring \
             --network app-net \
             --restart unless-stopped \
             -p ${{ secrets.SERVER_PORT }}:${{ secrets.SERVER_PORT }} \

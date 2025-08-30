@@ -21,6 +21,12 @@ public class RoutePlaceBoxResponse {
 
     private String imageUrl;
 
+    private Double latitude;
+
+    private Double longitude;
+
+    private String address;
+
     public static RoutePlaceBoxResponse toDto(RoutePlace routePlace) {
         return RoutePlaceBoxResponse.builder()
             .title(routePlace.getPlaceName())
@@ -29,6 +35,9 @@ public class RoutePlaceBoxResponse {
             .contentId(routePlace.getContentId())
             .contentTypeId(routePlace.getContentTypeId())
             .imageUrl(routePlace.getImageUrl())
+            .latitude(routePlace.getLatitude())
+            .longitude(routePlace.getLongitude())
+            .address(routePlace.getAddress())
             .build();
     }
 }

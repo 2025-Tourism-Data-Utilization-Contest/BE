@@ -35,9 +35,22 @@ public class RoutePlaceCreateRequest {
     @Schema(description = "TourAPI 조회용 pk값 2", example = "1")
     private String contentTypeId;
 
+    @NotNull
     @Schema(
         description = "TourAPI 이미지 썸네일 조회용 url",
         example = "https://tong.visitkorea.or.kr/cms/resource/52/3514552_image2_1.jpg"
     )
     private String imageUrl;
+
+    @NotNull
+    @Schema(description = "TourAPI에서 받아온 위도", example = "37.8228")
+    private Double latitude;
+
+    @NotNull
+    @Schema(description = "TourAPI에서 받아온 경도", example = "127.6375")
+    private Double longitude;
+
+    @NotNull
+    @Schema(description = "TourAPI에서 받아온 주소", example = "강원 춘천시 남산면 북한강변길 688")
+    private String address;
 }
