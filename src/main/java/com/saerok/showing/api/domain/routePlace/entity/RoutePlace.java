@@ -58,6 +58,15 @@ public class RoutePlace extends BaseEntity {
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
+    @Column(name = "latitude", nullable = false)
+    private Double latitude;
+
+    @Column(name = "longitude", nullable = false)
+    private Double longitude;
+
+    @Column(name = "address", nullable = false)
+    private String address;
+
     public static RoutePlace toEntity(RoutePlaceCreateRequest request, Route route, String PlaceName) {
         return RoutePlace.builder()
             .route(route)
@@ -67,6 +76,7 @@ public class RoutePlace extends BaseEntity {
             .contentId(request.getContentId())
             .contentTypeId(request.getContentTypeId())
             .imageUrl(request.getImageUrl())
+
             .build();
     }
 
