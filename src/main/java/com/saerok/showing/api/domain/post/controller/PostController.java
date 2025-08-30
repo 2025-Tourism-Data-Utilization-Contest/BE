@@ -38,7 +38,8 @@ public class PostController {
             [모든 Role 가능] 게시글을 작성합니다.<br>
             요청 본문에는 제목, 내용, 게시글 타입, 게시글 이미지(리스트), 해시태그(리스트)가 포함됩니다.<br>
             게시글 이미지는 "/api/v1/file/post"를 이용하여 얻은 fileUrl값들을 입력해주세요.<br>
-            전체 공개는 VISIBLE_ALL, 팀만 공개는 TEAM_ONLY로 visibility를 지정해주세요.
+            전체 공개는 VISIBLE_ALL, 팀만 공개는 TEAM_ONLY로 visibility를 지정해주세요.<br>
+            팀이 여러 개인 경우 어느 팀에만 공개하는 게시글인지 해당 팀의 fk가 필요합니다.
             """
     )
     @PreAuthorize("hasRole('MEMBER')")
@@ -71,7 +72,7 @@ public class PostController {
             - `postType`을 생략하면 전체 게시글이 조회됩니다.<br>
             - 정렬 타입: 최신순(LATEST), 인기순(POPULAR)<br>
             - `sort`을 생략하면 최신순으로 정렬됩니다.<br>
-            
+            - 게시글 가시성: `teamId`가 없으면 전체 게시글, `teamId`가 있으면 해당 팀 게시글입니다.<br><br>
             📌 커서 기반 페이지네이션 안내<br>
             - `cursorRaw` : 마지막으로 조회된 게시글의 `createdAt` 값입니다. 이후의 데이터를 조회할 때 사용됩니다.<br>
             - `limit` : 한 번에 가져올 데이터 수입니다. 기본값은 4이며, 무한 스크롤에 사용됩니다.<br>
@@ -81,12 +82,13 @@ public class PostController {
     @PreAuthorize("hasRole('MEMBER')")
     @GetMapping("/list")
     public ApiResponse<CursorResult<PostSummaryResponse>> getPosts(
+        @RequestParam(name = "teamId", required = false) Long teamId,
         @RequestParam(name = "postType", required = false) PostType postType,
         @RequestParam(name = "sort", required = false, defaultValue = "LATEST") PostSortType sortType,
         @RequestParam(name = "cursorRaw", required = false) String cursorRaw,
         @RequestParam(name = "limit", defaultValue = "4") int limit
     ) {
-        CursorResult<PostSummaryResponse> result = postService.getPosts(postType, sortType, cursorRaw, limit);
+        CursorResult<PostSummaryResponse> result = postService.getPosts(teamId, postType, sortType, cursorRaw, limit);
         return ApiResponse.success(result);
     }
 
