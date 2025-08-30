@@ -36,6 +36,8 @@ public class PostSummaryResponse implements CreatedAtProvider, PopularProvider {
 
     private int commentCount;
 
+    private boolean isLiked;
+
     private LocalDateTime createdAt;
 
     @Override
@@ -48,7 +50,7 @@ public class PostSummaryResponse implements CreatedAtProvider, PopularProvider {
         return createdAt;
     }
 
-    public static PostSummaryResponse toDto(Post post, int commentCount) {
+    public static PostSummaryResponse toDto(Post post, int commentCount, boolean isLiked) {
         Optional<UploadedFile> firstFile = post.getPostImages().stream().findFirst();
         ExternalFileResponse imageDto = firstFile
             .map(ExternalFileResponse::toDto)
@@ -65,6 +67,7 @@ public class PostSummaryResponse implements CreatedAtProvider, PopularProvider {
             .postType(post.getPostType())
             .likeCount(post.getLikeCount())
             .commentCount(commentCount)
+            .isLiked(isLiked)
             .createdAt(post.getCreatedAt())
             .build();
     }
