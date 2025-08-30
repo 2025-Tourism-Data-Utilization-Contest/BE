@@ -35,4 +35,7 @@ public class RoutePlaceUpdateRequest {
 
     @Schema(description = "TourAPI 조회용 pk값 2", example = "1")
     private String contentTypeId;
+
+    @Schema(description = "TourAPI 이미지 썸네일 조회용 url", example = "")
+    private String imageUrl;
 }

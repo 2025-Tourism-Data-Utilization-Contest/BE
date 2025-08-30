@@ -55,6 +55,9 @@ public class RoutePlace extends BaseEntity {
     @Column(name = "content_type_id", nullable = false)
     private String contentTypeId;
 
+    @Column(name = "image_url", nullable = false)
+    private String imageUrl;
+
     public static RoutePlace toEntity(RoutePlaceCreateRequest request, Route route, String PlaceName) {
         return RoutePlace.builder()
             .route(route)
@@ -63,6 +66,7 @@ public class RoutePlace extends BaseEntity {
             .orderInDay(request.getOrderInDay())
             .contentId(request.getContentId())
             .contentTypeId(request.getContentTypeId())
+            .imageUrl(request.getImageUrl())
             .build();
     }
 
