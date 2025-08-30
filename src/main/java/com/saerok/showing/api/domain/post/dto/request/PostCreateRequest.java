@@ -41,4 +41,7 @@ public class PostCreateRequest {
     @NotNull
     @Schema(description = "해시태그 목록", example = "[\"#순천만습지\", \"#두루미\"]")
     private List<String> hashtags;
+
+    @Schema(description = "TEAM_ONLY인 경우 필수. 해당 팀 ID", example = "1")
+    private Long teamId;
 }
