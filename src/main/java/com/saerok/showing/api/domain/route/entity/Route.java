@@ -49,17 +49,20 @@ public class Route extends BaseEntity {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "start_date")
+    @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
 
-    @Column(name = "end_date")
+    @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
-    @Column(name = "people_count")
+    @Column(name = "people_count", nullable = false)
     private Integer peopleCount;
 
     @Column(name = "like_count", nullable = false)
     private int likeCount;
+
+    @Column(name = "theme_id")
+    private Long themeId;
 
     @OneToMany(mappedBy = "route", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RoutePlace> routePlaces = new ArrayList<>();
@@ -76,6 +79,7 @@ public class Route extends BaseEntity {
             .endDate(request.getEndDate())
             .peopleCount(request.getPeopleCount())
             .likeCount(0)
+            .themeId(request.getThemeId())
             .build();
     }
 

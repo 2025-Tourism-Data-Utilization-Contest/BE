@@ -27,6 +27,9 @@ public class RouteCreateRequest {
     private LocalDate endDate;
 
     @Min(1) @Max(100) @NotNull
-    @Schema(description = "인원수, 1~100의 값을 가질 수 있습니다.", example = "15")
+    @Schema(description = "인원수, 1~100의 값을 가질 수 있습니다.", example = "8")
     private int peopleCount;
+
+    @Schema(description = "연결할 테마 ID, 없으면 null", example = "3")
+    private Long themeId;
 }
