@@ -4,6 +4,7 @@ import com.saerok.showing.api.domain.member.entity.Member;
 import com.saerok.showing.api.domain.memberTeam.entity.MemberTeam;
 import com.saerok.showing.api.domain.memberTeam.repository.MemberTeamRepository;
 import com.saerok.showing.api.domain.team.entity.Team;
+import com.saerok.showing.api.domain.team.repository.TeamRepository;
 import com.saerok.showing.api.global.exception.ErrorCode;
 import com.saerok.showing.api.global.exception.ShowingException;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberTeamService {
 
+    private final TeamRepository teamRepository;
     private final MemberTeamRepository memberTeamRepository;
 
     @Transactional
@@ -31,24 +33,25 @@ public class MemberTeamService {
         memberTeamRepository.delete(memberTeam);
     }
 
-    // 특정 팀의 모든 멤버 조회
     @Transactional(readOnly = true)
     public List<MemberTeam> getMembersByTeamId(Long teamId) {
         return memberTeamRepository.findWithMemberByTeamId(teamId);
     }
 
-    // 특정 멤버가 속한 모든 팀 조회
     @Transactional(readOnly = true)
     public List<MemberTeam> getTeamsByMemberId(Long memberId) {
         return memberTeamRepository.findWithTeamByMemberId(memberId);
     }
 
     @Transactional(readOnly = true)
-    public List<Long> getTeamIdsByMemberId(Long memberId) {
-        return memberTeamRepository.findWithTeamByMemberId(memberId)
-            .stream()
-            .map(mt -> mt.getTeam().getId())
-            .toList();
+    public Team findTeamById(Long teamId) {
+        return teamRepository.findById(teamId)
+            .orElseThrow(() -> ShowingException.from(ErrorCode.TEAM_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    public boolean existsByMemberIdAndTeamId(Long memberId, Long teamId) {
+        return memberTeamRepository.existsByMemberIdAndTeamId(memberId, teamId);
     }
 
     private void validateNotAlreadyJoined(Member member, Team team) {

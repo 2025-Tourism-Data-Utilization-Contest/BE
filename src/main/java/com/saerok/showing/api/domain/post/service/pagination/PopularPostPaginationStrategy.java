@@ -45,34 +45,37 @@ public class PopularPostPaginationStrategy implements PostPaginationStrategy {
     }
 
     @Override
-    public List<Post> paginate(PostType postType, Object cursor, int limit, List<Long> teamIds) {
-        if (cursor == null) {
-            return postRepository.findVisiblePostsOrderByLikeCountDesc(postType, teamIds)
-                .stream()
-                .limit(limit + 1)
-                .toList();
+    public List<Post> paginate(Long teamId, PostType postType, Object cursor, int limit) {
+        PopularCursor c = (cursor instanceof PopularCursor pc) ? pc : null;
+        List<Post> posts;
+        if (teamId == null) {
+            // 전체 피드 (VISIBLE_ALL)
+            posts = (c == null
+                ? postRepository.findPublicPostsOrderByLikeCountDesc(postType)
+                : postRepository.findPublicPostsByPopularCursor(postType, c.likeCount(), c.createdAt()));
+        } else {
+            // 팀 피드 (TEAM_ONLY)
+            posts = (c == null
+                ? postRepository.findTeamPostsOrderByLikeCountDesc(teamId, postType)
+                : postRepository.findTeamPostsByPopularCursor(teamId, postType, c.likeCount(), c.createdAt()));
         }
-        if (cursor instanceof PopularCursor c) {
-            return postRepository.findVisiblePostsByPopularCursor(postType, c.likeCount(), c.createdAt(), teamIds)
-                .stream()
-                .limit(limit + 1)
-                .toList();
-        }
-        throw ShowingException.from(ErrorCode.INVALID_CURSOR_FORMAT);
+        return posts.stream()
+            .limit(limit + 1)
+            .toList();
     }
 
     @Override
     public CursorResult<PostSummaryResponse> getCursorResult(
+        Long teamId,
         PostType postType,
         String cursorRaw,
         int limit,
-        List<Long> teamIds,
         CommentCountProvider commentCountProvider,
         LikeReadService likeReadService,
         Member currentMember
     ) {
         PopularCursor cursor = (PopularCursor) parseCursor(cursorRaw);
-        List<Post> posts = paginate(postType, cursor, limit, teamIds);
+        List<Post> posts = paginate(teamId, postType, cursor, limit);
         List<PostSummaryResponse> responses = posts.stream()
             .map(post -> {
                 boolean isLiked = likeReadService.isPostLiked(currentMember, post.getId());

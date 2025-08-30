@@ -19,6 +19,7 @@ public enum ErrorCode {
     INVALID_CURSOR_FORMAT(HttpStatus.BAD_REQUEST, "커서 형식이 잘못되었습니다."),
     INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "유효하지 않은 입력 값입니다."),
     INVALID_ROUTE_TITLE(HttpStatus.BAD_REQUEST, "여행코스 제목이 비어 있거나 올바르지 않습니다."),
+    INVALID_POST_VISIBILITY(HttpStatus.BAD_REQUEST, "게시글 공개 범위와 팀 정보가 올바르지 않습니다."),
 
     // 401: UNAUTHORIZED (인증 실패)
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증이 필요합니다."),
@@ -45,6 +46,7 @@ public enum ErrorCode {
     NO_TEAM_LEADER_PERMISSION(HttpStatus.FORBIDDEN, "요청한 사항은 팀 리더만 가능합니다."),
     ALREADY_JOINED_TEAM(HttpStatus.FORBIDDEN, "이미 팀에 가입되어 있습니다."),
     NOT_MEMBER_OF_TEAM(HttpStatus.FORBIDDEN, "요청한 팀에 소속되어 있지 않습니다."),
+    NO_TEAM_MEMBER_PERMISSION(HttpStatus.FORBIDDEN, "팀 멤버만 접근할 수 있습니다."),
 
     // 404: NOT FOUND (리소스를 찾을 수 없음)
     RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND, "요청한 리소스를 찾을 수 없습니다."),

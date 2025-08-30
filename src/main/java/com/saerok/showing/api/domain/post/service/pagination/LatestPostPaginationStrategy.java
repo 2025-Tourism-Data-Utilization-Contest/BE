@@ -42,29 +42,37 @@ public class LatestPostPaginationStrategy implements PostPaginationStrategy {
     }
 
     @Override
-    public List<Post> paginate(PostType postType, Object cursor, int limit, List<Long> teamIds) {
+    public List<Post> paginate(Long teamId, PostType postType, Object cursor, int limit) {
         LocalDateTime cursorTime = (cursor instanceof CreatedAtCursor c) ? c.createdAt() : null;
-        return (
-            cursorTime == null
-                ? postRepository.findVisiblePostsOrderByCreatedAtDesc(postType, teamIds)
-                : postRepository.findVisiblePostsByCreatedAtBefore(postType, cursorTime, teamIds)
-        ).stream()
+        List<Post> posts;
+        if (teamId == null) {
+            // 전체 피드 (VISIBLE_ALL)
+            posts = (cursorTime == null
+                ? postRepository.findPublicPostsOrderByCreatedAtDesc(postType)
+                : postRepository.findPublicPostsByCreatedAtBefore(postType, cursorTime));
+        } else {
+            // 팀 피드 (TEAM_ONLY)
+            posts = (cursorTime == null
+                ? postRepository.findTeamPostsOrderByCreatedAtDesc(teamId, postType)
+                : postRepository.findTeamPostsByCreatedAtBefore(teamId, postType, cursorTime));
+        }
+        return posts.stream()
             .limit(limit + 1)
             .toList();
     }
 
     @Override
     public CursorResult<PostSummaryResponse> getCursorResult(
+        Long teamId,
         PostType postType,
         String cursorRaw,
         int limit,
-        List<Long> teamIds,
         CommentCountProvider commentCountProvider,
         LikeReadService likeReadService,
         Member currentMember
     ) {
         CreatedAtCursor cursor = (CreatedAtCursor) parseCursor(cursorRaw);
-        List<Post> posts = paginate(postType, cursor, limit, teamIds);
+        List<Post> posts = paginate(teamId, postType, cursor, limit);
         List<PostSummaryResponse> responses = posts.stream()
             .map(post -> {
                 boolean isLiked = likeReadService.isPostLiked(currentMember, post.getId());

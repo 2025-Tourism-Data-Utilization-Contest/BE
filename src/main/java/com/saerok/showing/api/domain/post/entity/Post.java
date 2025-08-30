@@ -3,6 +3,7 @@ package com.saerok.showing.api.domain.post.entity;
 import com.saerok.showing.api.domain.member.entity.Member;
 import com.saerok.showing.api.domain.post.dto.request.PostCreateRequest;
 import com.saerok.showing.api.domain.post.dto.request.PostUpdateRequest;
+import com.saerok.showing.api.domain.team.entity.Team;
 import com.saerok.showing.api.global.entity.BaseEntity;
 import com.saerok.showing.api.global.exception.ErrorCode;
 import com.saerok.showing.api.global.exception.ShowingException;
@@ -74,8 +75,12 @@ public class Post extends BaseEntity {
     @Column(name = "like_count", nullable = false)
     private int likeCount;
 
-    public static Post toEntity(Member member, PostCreateRequest request, List<UploadedFile> files) {
-        return Post.builder()
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
+    private Team team;
+
+    public static Post toEntity(Member member, PostCreateRequest request, List<UploadedFile> files, Team team) {
+        Post post = Post.builder()
             .member(member)
             .title(request.getTitle())
             .visibility(request.getVisibility())
@@ -84,7 +89,10 @@ public class Post extends BaseEntity {
             .postImages(files)
             .hashtags(request.getHashtags())
             .likeCount(0)
+            .team(request.getVisibility() == PostVisibility.TEAM_ONLY ? team : null)
             .build();
+        post.validateVisibilityInvariant();
+        return post;
     }
 
     public void validateOwner(Member currentMember) {
@@ -93,11 +101,13 @@ public class Post extends BaseEntity {
         }
     }
 
-    public void update(PostUpdateRequest request) {
+    public void update(PostUpdateRequest request, Team teamIfTeamOnly) {
         this.title = request.getTitle();
         this.content = request.getContent();
         this.visibility = request.getVisibility();
         this.hashtags = request.getHashtags();
+        this.team = this.visibility == PostVisibility.TEAM_ONLY ? teamIfTeamOnly : null;
+        validateVisibilityInvariant();
     }
 
     public void increaseLikeCount() {
@@ -107,6 +117,15 @@ public class Post extends BaseEntity {
     public void decreaseLikeCount() {
         if (this.likeCount > 0) {
             this.likeCount--;
+        }
+    }
+
+    private void validateVisibilityInvariant() {
+        if (this.visibility == PostVisibility.TEAM_ONLY && this.team == null) {
+            throw ShowingException.from(ErrorCode.INVALID_POST_VISIBILITY);
+        }
+        if (this.visibility == PostVisibility.VISIBLE_ALL && this.team != null) {
+            throw ShowingException.from(ErrorCode.INVALID_POST_VISIBILITY);
         }
     }
 }

@@ -16,13 +16,13 @@ public interface PostPaginationStrategy {
 
     Object parseCursor(String rawCursor);
 
-    List<Post> paginate(PostType postType, Object cursor, int limit, List<Long> teamIds);
+    List<Post> paginate(Long teamId, PostType postType, Object cursor, int limit);
 
     CursorResult<PostSummaryResponse> getCursorResult(
+        Long teamId,
         PostType postType,
         String rawCursor,
         int limit,
-        List<Long> teamIds,
         CommentCountProvider commentCountProvider,
         LikeReadService likeReadService,
         Member currentMember
