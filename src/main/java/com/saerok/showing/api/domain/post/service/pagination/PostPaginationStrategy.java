@@ -1,6 +1,8 @@
 package com.saerok.showing.api.domain.post.service.pagination;
 
 import com.saerok.showing.api.domain.comment.service.CommentCountProvider;
+import com.saerok.showing.api.domain.like.service.LikeReadService;
+import com.saerok.showing.api.domain.member.entity.Member;
 import com.saerok.showing.api.domain.post.dto.response.PostSummaryResponse;
 import com.saerok.showing.api.domain.post.entity.Post;
 import com.saerok.showing.api.domain.post.entity.PostSortType;
@@ -21,6 +23,8 @@ public interface PostPaginationStrategy {
         String rawCursor,
         int limit,
         List<Long> teamIds,
-        CommentCountProvider commentCountProvider
+        CommentCountProvider commentCountProvider,
+        LikeReadService likeReadService,
+        Member currentMember
     );
 }
