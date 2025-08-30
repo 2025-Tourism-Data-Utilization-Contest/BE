@@ -1,6 +1,8 @@
 package com.saerok.showing.api.domain.post.service.pagination;
 
 import com.saerok.showing.api.domain.comment.service.CommentCountProvider;
+import com.saerok.showing.api.domain.like.service.LikeReadService;
+import com.saerok.showing.api.domain.member.entity.Member;
 import com.saerok.showing.api.domain.post.dto.response.PostSummaryResponse;
 import com.saerok.showing.api.domain.post.entity.Post;
 import com.saerok.showing.api.domain.post.entity.PostSortType;
@@ -65,12 +67,18 @@ public class PopularPostPaginationStrategy implements PostPaginationStrategy {
         String cursorRaw,
         int limit,
         List<Long> teamIds,
-        CommentCountProvider commentCountProvider
+        CommentCountProvider commentCountProvider,
+        LikeReadService likeReadService,
+        Member currentMember
     ) {
         PopularCursor cursor = (PopularCursor) parseCursor(cursorRaw);
         List<Post> posts = paginate(postType, cursor, limit, teamIds);
         List<PostSummaryResponse> responses = posts.stream()
-            .map(post -> PostSummaryResponse.toDto(post, commentCountProvider.getCount(post.getId())))
+            .map(post -> {
+                boolean isLiked = likeReadService.isPostLiked(currentMember, post.getId());
+                int commentCount = commentCountProvider.getCount(post.getId());
+                return PostSummaryResponse.toDto(post, commentCount, isLiked);
+            })
             .toList();
         return PopularCursorResult.of(responses, cursor, limit);
     }
