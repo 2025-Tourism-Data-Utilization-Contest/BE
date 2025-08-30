@@ -34,11 +34,13 @@ public class PostDetailResponse {
 
     private int commentCount;
 
+    private boolean isLiked;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
 
-    public static PostDetailResponse toDto(Post post, int commentCount) {
+    public static PostDetailResponse toDto(Post post, int commentCount, boolean isLiked) {
         List<UploadedFile> files = post.getPostImages();
         return PostDetailResponse.builder()
             .id(post.getId())
@@ -51,6 +53,7 @@ public class PostDetailResponse {
             .postType(post.getPostType())
             .likeCount(post.getLikeCount())
             .commentCount(commentCount)
+            .isLiked(isLiked)
             .createdAt(post.getCreatedAt())
             .updatedAt(post.getUpdatedAt())
             .build();
