@@ -23,6 +23,10 @@ public class ThemeDetailResponse {
 
     private String locationIntro;
 
+    private Double locationX;
+
+    private Double locationY;
+
     private List<String> highlightPoints;
 
     private List<DescriptionBlockResponse> descriptionBlocks;
@@ -50,6 +54,8 @@ public class ThemeDetailResponse {
             .title(theme.getTitle())
             .address(theme.getAddress())
             .locationIntro(theme.getLocationIntro())
+            .locationX(theme.getLocationX())
+            .locationY(theme.getLocationY())
             .highlightPoints(theme.getHighlightPoints())
             .descriptionBlocks(DescriptionBlockResponse.fromList(theme.getDescriptionBlocks()))
             .themeImage(theme.getThemeImage())
