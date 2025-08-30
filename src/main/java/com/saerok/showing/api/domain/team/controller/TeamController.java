@@ -2,6 +2,7 @@ package com.saerok.showing.api.domain.team.controller;
 
 import com.saerok.showing.api.domain.team.dto.request.TeamCreateRequest;
 import com.saerok.showing.api.domain.team.dto.request.TeamJoinRequest;
+import com.saerok.showing.api.domain.team.dto.response.MyTeamResponse;
 import com.saerok.showing.api.domain.team.dto.response.TeamMemberResponse;
 import com.saerok.showing.api.domain.team.service.TeamService;
 import com.saerok.showing.api.global.response.ApiResponse;
@@ -94,6 +95,16 @@ public class TeamController {
     ) {
         List<TeamMemberResponse> members = teamService.getTeamMembers(teamId);
         return ApiResponse.success(members);
+    }
+
+    @Operation(
+        summary = "내가 소속된 팀 목록 조회",
+        description = "[모든 Role 가능] 현재 로그인한 사용자가 속한 모든 팀을 반환합니다."
+    )
+    @PreAuthorize("hasRole('MEMBER')")
+    @GetMapping("/me")
+    public ApiResponse<List<MyTeamResponse>> getMyTeams() {
+        return ApiResponse.success(teamService.getMyTeams());
     }
 
     @Operation(
