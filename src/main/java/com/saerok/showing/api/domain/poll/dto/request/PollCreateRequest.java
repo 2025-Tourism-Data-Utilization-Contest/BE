@@ -28,4 +28,8 @@ public class PollCreateRequest {
     @NotNull
     @Schema(description = "투표 종료일 (YYYY-MM-DD)", example = "2025-08-17")
     private LocalDate endDate;
+
+    @NotNull
+    @Schema(description = "투표를 올릴 팀 id", example = "1")
+    private Long teamId;
 }
