@@ -76,7 +76,9 @@ public class RoutePlace extends BaseEntity {
             .contentId(request.getContentId())
             .contentTypeId(request.getContentTypeId())
             .imageUrl(request.getImageUrl())
-
+            .longitude(request.getLatitude())
+            .latitude(request.getLatitude())
+            .address(request.getAddress())
             .build();
     }
 
