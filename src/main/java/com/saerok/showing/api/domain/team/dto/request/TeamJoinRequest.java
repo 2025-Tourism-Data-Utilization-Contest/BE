@@ -18,7 +18,7 @@ public class TeamJoinRequest {
     @Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d)[A-Z\\d]{6}$")
     @Schema(
         description = "팀 인증코드입니다. 영문 대문자와 숫자를 조합한 정확히 6자리 문자열이어야 합니다.",
-        example = "show25"
+        example = "SHOW25"
     )
     private String password;
 }
