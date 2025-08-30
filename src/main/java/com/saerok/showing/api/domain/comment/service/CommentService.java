@@ -1,5 +1,6 @@
 package com.saerok.showing.api.domain.comment.service;
 
+import com.saerok.showing.api.domain.like.service.LikeReadService;
 import com.saerok.showing.api.domain.member.entity.Member;
 import com.saerok.showing.api.domain.comment.dto.request.CommentCreateRequest;
 import com.saerok.showing.api.domain.comment.dto.response.CommentResponse;
@@ -23,6 +24,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final LoginMemberProvider loginMemberProvider;
     private final PostService postService;
+    private final LikeReadService likeReadService;
 
     @Transactional
     public Long create(Long postId, CommentCreateRequest request) {
@@ -35,9 +37,13 @@ public class CommentService {
 
     @Transactional(readOnly = true)
     public List<CommentResponse> getCommentsByPostId(Long postId) {
+        Member currentMember = loginMemberProvider.getCurrentLoginMember();
         List<Comment> comments = commentRepository.findAllByPostId(postId);
         return comments.stream()
-            .map(CommentResponse::toDto)
+            .map(comment -> {
+                boolean isLiked = likeReadService.isCommentLiked(currentMember, comment.getId());
+                return CommentResponse.toDto(comment, isLiked);
+            })
             .collect(Collectors.toList());
     }
 
