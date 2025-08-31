@@ -42,7 +42,7 @@ public class PollDetailResponse {
         return PollDetailResponse.builder()
             .id(poll.getId())
             .writer(member.getName())
-            .writer(member.getProfileImage())
+            .writerProfileImage(member.getProfileImage())
             .title(poll.getTitle())
             .pollStatus(poll.getPollStatus())
             .startDate(poll.getStartDate())
