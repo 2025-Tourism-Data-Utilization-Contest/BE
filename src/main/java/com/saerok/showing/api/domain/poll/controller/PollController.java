@@ -9,6 +9,7 @@ import com.saerok.showing.api.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,6 +43,19 @@ public class PollController {
     ) {
         Long id = pollService.save(request);
         return ApiResponse.success(id);
+    }
+
+    @Operation(
+        summary = "팀 내 모든 투표 후보 조회",
+        description = "[모든 Role 가능] 팀 내 모든 투표 리스트를 조회합니다."
+    )
+    @PreAuthorize("hasRole('MEMBER')")
+    @GetMapping("team/{teamId}")
+    public ApiResponse<List<PollDetailResponse>> getTeamPolls(
+        @PathVariable(name = "teamId") Long teamId
+    ) {
+        List<PollDetailResponse> polls = pollService.getTeamPolls(teamId);
+        return ApiResponse.success(polls);
     }
 
     @Operation(
