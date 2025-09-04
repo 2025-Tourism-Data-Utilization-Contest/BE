@@ -43,6 +43,22 @@ public class PollService {
     }
 
     @Transactional(readOnly = true)
+    public List<PollDetailResponse> getTeamPolls(Long teamId) {
+        Long memberId = loginMemberProvider.getCurrentLoginMemberId();
+        validateTeamMember(teamId, memberId);
+        return pollRepository.findAllByTeamId(teamId)
+            .stream()
+            .map(poll -> {
+                int commentCount = pollRepository.countCommentsOfPoll(poll.getId());
+                List<RouteSummaryResponse> routeSummaries = poll.getRouteOptions().stream()
+                    .map(route -> RouteSummaryResponse.toDto(route, List.of()))
+                    .toList();
+                return PollDetailResponse.toDto(poll, poll.getMember(), commentCount, routeSummaries);
+            })
+            .toList();
+    }
+
+    @Transactional(readOnly = true)
     public PollDetailResponse getPoll(Long pollId) {
         Poll poll = findById(pollId);
         int commentCount = getCommentCount(pollId);
@@ -85,6 +101,13 @@ public class PollService {
         pollRepository.delete(poll);
         return pollId;
     }
+
+    private void validateTeamMember(Long teamId, Long memberId) {
+        if (!memberTeamService.existsByMemberIdAndTeamId(memberId, teamId)) {
+            throw ShowingException.from(ErrorCode.NOT_MEMBER_OF_TEAM);
+        }
+    }
+
 
     private void validateTeamMember(Poll poll, Member member) {
         if (!memberTeamService.existsByMemberIdAndTeamId(member.getId(), poll.getTeam().getId())) {
