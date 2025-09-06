@@ -13,6 +13,10 @@ public class RouteSummaryResponse {
 
     private Long id;
 
+    private String writerName;
+
+    private String writerProfileImage;
+
     private String title;
 
     private LocalDate startDate;
@@ -28,6 +32,8 @@ public class RouteSummaryResponse {
     public static RouteSummaryResponse toDto(Route route, List<PlaceSummaryResponse> placeSummaries) {
         return RouteSummaryResponse.builder()
             .id(route.getId())
+            .writerName(route.getMember().getName())
+            .writerProfileImage(route.getMember().getProfileImage())
             .title(route.getTitle())
             .startDate(route.getStartDate())
             .endDate(route.getEndDate())
