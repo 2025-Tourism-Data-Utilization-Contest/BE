@@ -98,6 +98,7 @@ public class PollService {
         Poll poll = findById(pollId);
         validateTeamMember(poll, member);
         poll.validateOwner(poll, member);
+        poll.getRouteOptions().forEach(route -> route.setPoll(null));
         pollRepository.delete(poll);
         return pollId;
     }

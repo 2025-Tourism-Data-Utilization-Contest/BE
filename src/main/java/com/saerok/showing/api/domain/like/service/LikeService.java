@@ -48,29 +48,25 @@ public class LikeService {
     }
 
     private boolean handleToggle(Member member, LikeToggleRequest request, Post post) {
-        Optional<Like> existingLike = likeRepository.findByMemberAndTargetIdAndTargetType(
-            member, request.getTargetId(), LikeTargetType.POST
-        );
+        Optional<Like> existingLike = likeRepository.findByMemberAndPost(member, post);
         if (existingLike.isPresent()) {
             likeRepository.delete(existingLike.get());
             post.decreaseLikeCount();
             return false;
         }
-        likeRepository.save(Like.toEntity(member, request));
+        likeRepository.save(Like.forPost(member, post));
         post.increaseLikeCount();
         return true;
     }
 
     private boolean handleToggle(Member member, LikeToggleRequest request, Comment comment) {
-        Optional<Like> existingLike = likeRepository.findByMemberAndTargetIdAndTargetType(
-            member, request.getTargetId(), LikeTargetType.COMMENT
-        );
+        Optional<Like> existingLike = likeRepository.findByMemberAndComment(member, comment);
         if (existingLike.isPresent()) {
             likeRepository.delete(existingLike.get());
             comment.decreaseLikeCount();
             return false;
         }
-        likeRepository.save(Like.toEntity(member, request));
+        likeRepository.save(Like.forComment(member, comment));
         comment.increaseLikeCount();
         return true;
     }

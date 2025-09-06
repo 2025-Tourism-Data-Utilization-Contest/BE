@@ -33,7 +33,8 @@ public class PollController {
         summary = "투표 등록",
         description = """
             [모든 Role 가능] 새 투표를 등록합니다.<br>
-            투표 등록 시, 반드시 teamId를 입력해야하며, 해당 투표 조회와 후보지 등록은 팀원만 가능합니다.
+            투표 등록 시, 반드시 teamId를 입력해야하며, 해당 투표 조회와 후보지 등록은 팀원만 가능합니다.<br>
+            투표 상태로는 READY(대기중), ONGOING(진행중), CLOSED(종료됨)가 있습니다.
             """
     )
     @PreAuthorize("hasRole('MEMBER')")

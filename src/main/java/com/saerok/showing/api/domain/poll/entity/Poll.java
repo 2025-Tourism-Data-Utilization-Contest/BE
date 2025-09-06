@@ -1,15 +1,20 @@
 package com.saerok.showing.api.domain.poll.entity;
 
+import com.saerok.showing.api.domain.comment.entity.Comment;
 import com.saerok.showing.api.domain.member.entity.Member;
 import com.saerok.showing.api.domain.poll.dto.request.PollCreateRequest;
 import com.saerok.showing.api.domain.poll.dto.request.PollUpdateRequest;
+import com.saerok.showing.api.domain.post.entity.Post;
 import com.saerok.showing.api.domain.route.entity.Route;
 import com.saerok.showing.api.domain.team.entity.Team;
 import com.saerok.showing.api.global.entity.BaseEntity;
 import com.saerok.showing.api.global.exception.ErrorCode;
 import com.saerok.showing.api.global.exception.ShowingException;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -45,6 +50,7 @@ public class Poll extends BaseEntity {
     @Column(name = "title", nullable = false)
     private String title;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "poll_type", nullable = false)
     private PollStatus pollStatus;
 
@@ -61,8 +67,14 @@ public class Poll extends BaseEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @OneToMany(mappedBy = "poll")
+    @OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Route> routeOptions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Post> posts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id", nullable = false)
