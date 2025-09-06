@@ -38,6 +38,7 @@ public class PostController {
             [모든 Role 가능] 게시글을 작성합니다.<br>
             요청 본문에는 제목, 내용, 게시글 타입, 게시글 이미지(리스트), 해시태그(리스트), 팀id가 포함됩니다.<br>
             게시글 이미지는 "/api/v1/file/post"를 이용하여 얻은 fileUrl값들을 입력해주세요.<br>
+            게시글 타입은 NORMAL(일반), POLL(투표 내 게시글)이 가능합니다.<br>
             전체 공개는 VISIBLE_ALL, 팀만 공개는 TEAM_ONLY로 visibility를 지정해주세요.<br>
             전체 공개 시에는 팀id 필드를 null로 주시면 됩니다.<br>
             팀이 여러 개인 경우 어느 팀에만 공개하는 게시글인지 해당 팀의 fk가 필요합니다.
