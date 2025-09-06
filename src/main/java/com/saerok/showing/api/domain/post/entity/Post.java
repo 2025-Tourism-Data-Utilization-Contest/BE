@@ -1,6 +1,9 @@
 package com.saerok.showing.api.domain.post.entity;
 
+import com.saerok.showing.api.domain.comment.entity.Comment;
+import com.saerok.showing.api.domain.like.entity.Like;
 import com.saerok.showing.api.domain.member.entity.Member;
+import com.saerok.showing.api.domain.poll.entity.Poll;
 import com.saerok.showing.api.domain.post.dto.request.PostCreateRequest;
 import com.saerok.showing.api.domain.post.dto.request.PostUpdateRequest;
 import com.saerok.showing.api.domain.team.entity.Team;
@@ -8,6 +11,7 @@ import com.saerok.showing.api.global.entity.BaseEntity;
 import com.saerok.showing.api.global.exception.ErrorCode;
 import com.saerok.showing.api.global.exception.ShowingException;
 import com.saerok.showing.api.global.file.entity.UploadedFile;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -75,9 +79,19 @@ public class Post extends BaseEntity {
     @Column(name = "like_count", nullable = false)
     private int likeCount;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "poll_id")
+    private Poll poll;
 
     public static Post toEntity(Member member, PostCreateRequest request, List<UploadedFile> files, Team team) {
         Post post = Post.builder()
@@ -118,6 +132,11 @@ public class Post extends BaseEntity {
         if (this.likeCount > 0) {
             this.likeCount--;
         }
+    }
+
+    public void addLike(Like like) {
+        likes.add(like);
+        like.setPost(this);
     }
 
     private void validateVisibilityInvariant() {
