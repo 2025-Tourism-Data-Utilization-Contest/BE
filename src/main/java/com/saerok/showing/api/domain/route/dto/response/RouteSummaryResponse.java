@@ -23,6 +23,8 @@ public class RouteSummaryResponse {
 
     private int likeCount;
 
+    private Long themeId;
+
     public static RouteSummaryResponse toDto(Route route, List<PlaceSummaryResponse> placeSummaries) {
         return RouteSummaryResponse.builder()
             .id(route.getId())
@@ -31,6 +33,7 @@ public class RouteSummaryResponse {
             .endDate(route.getEndDate())
             .placeSummaries(placeSummaries)
             .likeCount(route.getLikeCount())
+            .themeId(route.getThemeId())
             .build();
     }
 }
