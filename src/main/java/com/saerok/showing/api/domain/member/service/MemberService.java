@@ -4,6 +4,7 @@ import com.saerok.showing.api.domain.member.dto.request.MemberUpdateRequest;
 import com.saerok.showing.api.domain.member.dto.response.MyPageResponse;
 import com.saerok.showing.api.domain.member.entity.Member;
 import com.saerok.showing.api.domain.member.repository.MemberRepository;
+import com.saerok.showing.api.domain.post.dto.response.PostSummaryResponse;
 import com.saerok.showing.api.domain.post.service.PostService;
 import com.saerok.showing.api.domain.route.dto.response.RouteSummaryResponse;
 import com.saerok.showing.api.domain.route.service.RouteService;
@@ -29,7 +30,8 @@ public class MemberService {
         Member member = loginMemberProvider.getCurrentLoginMember();
         int postCount = postService.getPostCount();
         List<RouteSummaryResponse> routes = routeService.getMyRouteSummaries();
-        return MyPageResponse.toDto(member, postCount, routes);
+        List<PostSummaryResponse> posts = postService.getMyLikesPostSummaries();
+        return MyPageResponse.toDto(member, postCount, routes, posts);
     }
 
     @Transactional

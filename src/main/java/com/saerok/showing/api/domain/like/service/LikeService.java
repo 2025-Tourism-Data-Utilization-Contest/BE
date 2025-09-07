@@ -54,7 +54,7 @@ public class LikeService {
             post.decreaseLikeCount();
             return false;
         }
-        likeRepository.save(Like.forPost(member, post));
+        likeRepository.save(Like.forPost(member, request, post));
         post.increaseLikeCount();
         return true;
     }
@@ -66,7 +66,7 @@ public class LikeService {
             comment.decreaseLikeCount();
             return false;
         }
-        likeRepository.save(Like.forComment(member, comment));
+        likeRepository.save(Like.forComment(member, request, comment));
         comment.increaseLikeCount();
         return true;
     }

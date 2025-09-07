@@ -1,5 +1,6 @@
 package com.saerok.showing.api.domain.poll.service;
 
+import com.saerok.showing.api.domain.like.service.LikeReadService;
 import com.saerok.showing.api.domain.member.entity.Member;
 import com.saerok.showing.api.domain.memberTeam.service.MemberTeamService;
 import com.saerok.showing.api.domain.place.dto.response.PlaceSummaryResponse;
@@ -28,6 +29,7 @@ public class PollService {
 
     private final PollRepository pollRepository;
     private final TeamService teamService;
+    private final LikeReadService likeReadService;
     private final RouteService routeService;
     private final MemberTeamService memberTeamService;
     private final LoginMemberProvider loginMemberProvider;
@@ -44,33 +46,40 @@ public class PollService {
 
     @Transactional(readOnly = true)
     public List<PollDetailResponse> getTeamPolls(Long teamId) {
-        Long memberId = loginMemberProvider.getCurrentLoginMemberId();
-        validateTeamMember(teamId, memberId);
+        Member member = loginMemberProvider.getCurrentLoginMember();
+        validateTeamMember(teamId, member.getId());
         return pollRepository.findAllByTeamId(teamId)
             .stream()
             .map(poll -> {
                 int commentCount = pollRepository.countCommentsOfPoll(poll.getId());
                 List<RouteSummaryResponse> routeSummaries = poll.getRouteOptions().stream()
-                    .map(route -> RouteSummaryResponse.toDto(route, List.of()))
+                    .map(route -> {
+                        boolean isPollOptionLiked = likeReadService.isPollOptionLiked(member, route.getId());
+                        return RouteSummaryResponse.toDto(route, List.of(), isPollOptionLiked);
+                    })
                     .toList();
-                return PollDetailResponse.toDto(poll, poll.getMember(), commentCount, routeSummaries);
+                boolean isLiked = likeReadService.isPollLiked(member, poll.getId());
+                return PollDetailResponse.toDto(poll, poll.getMember(), commentCount, routeSummaries, isLiked);
             })
             .toList();
     }
 
     @Transactional(readOnly = true)
     public PollDetailResponse getPoll(Long pollId) {
+        Member member = loginMemberProvider.getCurrentLoginMember();
         Poll poll = findById(pollId);
         int commentCount = getCommentCount(pollId);
         List<RouteSummaryResponse> routeSummaries = poll.getRouteOptions().stream()
             .map(route -> {
+                boolean isPollOptionLiked = likeReadService.isPollOptionLiked(member, route.getId());
                 List<PlaceSummaryResponse> placeSummaries = route.getRoutePlaces().stream()
                     .map(routePlace -> PlaceSummaryResponse.create(routePlace.getPlaceName()))
                     .toList();
-                return RouteSummaryResponse.toDto(route, placeSummaries);
+                return RouteSummaryResponse.toDto(route, placeSummaries, isPollOptionLiked);
             })
             .toList();
-        return PollDetailResponse.toDto(poll, poll.getMember(), commentCount, routeSummaries);
+        boolean isLiked = likeReadService.isPollLiked(member, pollId);
+        return PollDetailResponse.toDto(poll, poll.getMember(), commentCount, routeSummaries, isLiked);
     }
 
     @Transactional

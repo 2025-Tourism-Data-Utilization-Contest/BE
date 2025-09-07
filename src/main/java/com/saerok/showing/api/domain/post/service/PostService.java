@@ -84,6 +84,18 @@ public class PostService {
         );
     }
 
+    @Transactional(readOnly = true)
+    public List<PostSummaryResponse> getMyLikesPostSummaries() {
+        Member member = loginMemberProvider.getCurrentLoginMember();
+        return likeReadService.getLikedPosts(member).stream()
+            .map(post -> PostSummaryResponse.toDto(
+                post,
+                post.getComments().size(),
+                true
+            ))
+            .toList();
+    }
+
     @Transactional
     public Long update(Long postId, PostUpdateRequest request) {
         Member member = loginMemberProvider.getCurrentLoginMember();

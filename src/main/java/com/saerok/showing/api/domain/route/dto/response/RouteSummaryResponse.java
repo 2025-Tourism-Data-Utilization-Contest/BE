@@ -29,7 +29,9 @@ public class RouteSummaryResponse {
 
     private Long themeId;
 
-    public static RouteSummaryResponse toDto(Route route, List<PlaceSummaryResponse> placeSummaries) {
+    private boolean liked;
+
+    public static RouteSummaryResponse toDto(Route route, List<PlaceSummaryResponse> placeSummaries, boolean liked) {
         return RouteSummaryResponse.builder()
             .id(route.getId())
             .writerName(route.getMember().getName())
@@ -40,6 +42,7 @@ public class RouteSummaryResponse {
             .placeSummaries(placeSummaries)
             .likeCount(route.getLikeCount())
             .themeId(route.getThemeId())
+            .liked(liked)
             .build();
     }
 }
