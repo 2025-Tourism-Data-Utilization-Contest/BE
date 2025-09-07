@@ -59,17 +59,24 @@ public class Like extends BaseEntity {
             .build();
     }
 
-    public static Like forPost(Member member, Post post) {
-        Like like = new Like();
-        like.setMember(member);
+    public static Like forPost(Member member, LikeToggleRequest request, Post post) {
+        Like like = Like.builder()
+            .member(member)
+            .targetId(request.getTargetId())
+            .targetType(request.getLikeTargetType())
+            .build();
         like.setPost(post);
         post.getLikes().add(like);
         return like;
     }
 
-    public static Like forComment(Member member, Comment comment) {
-        Like like = new Like();
-        like.setMember(member);
+
+    public static Like forComment(Member member, LikeToggleRequest request, Comment comment) {
+        Like like = Like.builder()
+            .member(member)
+            .targetId(request.getTargetId())
+            .targetType(request.getLikeTargetType())
+            .build();
         like.setComment(comment);
         comment.getLikes().add(like);
         return like;

@@ -22,4 +22,19 @@ public class LikeReadService {
     public boolean isCommentLiked(Member member, Long commentId) {
         return likeRepository.findByMemberAndTargetIdAndTargetType(member, commentId, LikeTargetType.COMMENT).isPresent();
     }
+
+    @Transactional(readOnly = true)
+    public boolean isRouteLiked(Member member, Long routeId) {
+        return likeRepository.findByMemberAndTargetIdAndTargetType(member, routeId, LikeTargetType.ROUTE).isPresent();
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isPollLiked(Member member, Long pollId) {
+        return likeRepository.findByMemberAndTargetIdAndTargetType(member, pollId, LikeTargetType.POLL).isPresent();
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isPollOptionLiked(Member member, Long pollOptionId) {
+        return likeRepository.findByMemberAndTargetIdAndTargetType(member, pollOptionId, LikeTargetType.POLL_OPTION).isPresent();
+    }
 }
