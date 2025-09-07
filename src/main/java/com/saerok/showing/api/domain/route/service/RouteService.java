@@ -1,5 +1,6 @@
 package com.saerok.showing.api.domain.route.service;
 
+import com.saerok.showing.api.domain.like.service.LikeReadService;
 import com.saerok.showing.api.domain.member.entity.Member;
 import com.saerok.showing.api.domain.place.dto.response.PlaceSummaryResponse;
 import com.saerok.showing.api.domain.route.dto.request.RouteCreateRequest;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class RouteService {
 
     private final RouteRepository routeRepository;
+    private final LikeReadService likeReadService;
     private final LoginMemberProvider loginMemberProvider;
 
     @Transactional
@@ -53,8 +55,8 @@ public class RouteService {
                     .limit(3)
                     .map(routePlace -> PlaceSummaryResponse.create(routePlace.getPlaceName()))
                     .toList();
-
-                return RouteSummaryResponse.toDto(route, topPlaces);
+                boolean isLiked = likeReadService.isRouteLiked(member, route.getId());
+                return RouteSummaryResponse.toDto(route, topPlaces, isLiked);
             })
             .toList();
     }
