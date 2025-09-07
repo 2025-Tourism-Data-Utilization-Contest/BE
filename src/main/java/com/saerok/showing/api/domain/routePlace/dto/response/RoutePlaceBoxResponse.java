@@ -1,7 +1,6 @@
 package com.saerok.showing.api.domain.routePlace.dto.response;
 
 import com.saerok.showing.api.domain.routePlace.entity.RoutePlace;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 
