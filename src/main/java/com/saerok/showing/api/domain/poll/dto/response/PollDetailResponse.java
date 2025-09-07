@@ -33,11 +33,14 @@ public class PollDetailResponse {
 
     private Long teamId;
 
+    private boolean isLiked;
+
     public static PollDetailResponse toDto(
         Poll poll,
         Member member,
         int commentCount,
-        List<RouteSummaryResponse> routes
+        List<RouteSummaryResponse> routes,
+        boolean isLiked
     ) {
         return PollDetailResponse.builder()
             .id(poll.getId())
@@ -50,6 +53,7 @@ public class PollDetailResponse {
             .commentCount(commentCount)
             .routes(routes)
             .teamId(poll.getTeam().getId())
+            .isLiked(isLiked)
             .build();
     }
 }
