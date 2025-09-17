@@ -27,7 +27,7 @@ public class GuestAuthController {
             기존의 소셜로그인과 로직은 동일하므로 별도의 구현 없이 엔드포인트만 호출하시면 됩니다.
             """
     )
-    @PostMapping("/guest")
+    @GetMapping("/guest")
     public ApiResponse<GuestLoginResponse> guestLogin(HttpServletResponse response) {
         GuestLoginResponse guestLoginResponse = guestAuthService.createGuestLogin(response);
         return ApiResponse.success(guestLoginResponse);
