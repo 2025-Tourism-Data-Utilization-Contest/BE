@@ -10,7 +10,8 @@ public class SecurityUrlConstants {
     public static final String[] PUBLIC_URLS = merge(
         Docs.URLS,
         OAuth2.URLS,
-        Common.URLS
+        Common.URLS,
+        GuestAuth.URLS
     );
 
     public static class Docs {
@@ -38,6 +39,12 @@ public class SecurityUrlConstants {
     public static class Common {
         public static final String[] URLS = {
             "/actuator/health", "/error", "/favicon.ico", "/"
+        };
+    }
+
+    public static class GuestAuth {
+        public static final String[] URLS = {
+            "/api/v1/auth/guest"
         };
     }
 
