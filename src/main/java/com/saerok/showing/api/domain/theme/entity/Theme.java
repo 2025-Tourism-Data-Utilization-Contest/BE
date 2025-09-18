@@ -48,8 +48,10 @@ public class Theme extends BaseEntity implements Locatable {
         name = "theme_season",
         joinColumns = @JoinColumn(name = "theme_id")
     )
+    
     @Enumerated(EnumType.STRING)
     @Column(name = "season")
+    @Builder.Default
     private List<Season> seasons = new ArrayList<>();
 
     @ElementCollection
@@ -57,6 +59,7 @@ public class Theme extends BaseEntity implements Locatable {
         name = "theme_daytime",
         joinColumns = @JoinColumn(name = "theme_id")
     )
+    
     @Enumerated(EnumType.STRING)
     @Column(name = "daytime")
     private List<DayTime> dayTimes = new ArrayList<>();
@@ -81,6 +84,7 @@ public class Theme extends BaseEntity implements Locatable {
         name = "theme_highlight_points",
         joinColumns = @JoinColumn(name = "theme_id")
     )
+    
     @OrderColumn(name = "list_order")
     @Column(name = "highlight_point", columnDefinition = "TEXT")
     private List<String> highlightPoints = new ArrayList<>();
@@ -90,6 +94,7 @@ public class Theme extends BaseEntity implements Locatable {
         name = "theme_description_blocks",
         joinColumns = @JoinColumn(name = "theme_id")
     )
+    
     @OrderColumn(name = "list_order")
     private List<DescriptionBlock> descriptionBlocks = new ArrayList<>();
 
