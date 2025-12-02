@@ -75,5 +75,4 @@ showing
 [추후 추가 예정]
 
 ## 🗂️ ERD (Entity Relationship Diagram)
-
-![erd.webp](./docs/showing_erd.png)
+[추후 추가 예정]
